@@ -2,6 +2,8 @@ const AWS = require("aws-sdk");
 AWS.config.update({ region: "us-east-1" });
 var lex = new AWS.LexRuntime();
 
+// NOTE: this will not work without loading the AWS credentials via a '.env' file located in the root of the project
+
 var params = {
     botAlias: "latent_space",
     botName: "drebin",
@@ -37,6 +39,13 @@ function handleMessage(id, message) {
     });
 }
 
+function rando(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
 module.exports = {
-    handleMessage
+    handleMessage,
+    rando
 };

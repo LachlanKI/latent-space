@@ -22,11 +22,9 @@
     };
 
     function inputEvent(e) {
-        console.log('eeeee', e)
         if (e.type === 'keydown' && e.keyCode !== 13) return;
         if (paused) return;
-        if (!input.value || !input.value.length || /^\s+$/.test(input.value))
-            return;
+        if (!input.value || !input.value.length || /^\s+$/.test(input.value)) return;
         let message = input.value
             .replace(/\s+/g, " ")
             .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
@@ -40,6 +38,7 @@
     document.addEventListener('keydown', inputEvent);
 
     // socket
+    // TODO: the socket will need to be changed when it is running of heroku
     var socket = io.connect("http://localhost:8080");
 
     socket.on('hi_there', data => {
