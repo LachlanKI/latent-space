@@ -1,0 +1,6 @@
+node_modules
+node_modules/
+*.zip
+.DS_Store
+garbage_file.json
+.env
