@@ -2,8 +2,8 @@
     margin: 0;
     font-family: 'Menlo', 'monoscript';
     user-select: none;
-    color: midnightblue;
-    text-shadow: 0px 0px 2px yellowgreen;
+    color: white;
+    text-transform: uppercase;
 }
 
 /* TODO: media queries for mobile devices */
@@ -11,59 +11,158 @@
 html {
     height: 100vh;
     width: 100vw;
-    
+
 }
 
 body {
-    width: 96%;
-    height: 96%;
-    background: linear-gradient(-48deg, slategrey, mistyrose);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
-
-#chatWrap {
-    position: relative;
-    width: 650px;
-    height: 400px;
-    border: 4px silver ridge;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    background-color: rgba(0, 79, 160, 0.2);
-    padding: 2px;
-    overflow: hidden;
-} 
-
-h1 {
-    position: absolute;
-    border: 4px silver ridge;
-    margin: 3px 3px;
-    padding: 4px;
-    background-color: rgba(200, 79, 160, 0.4);
-    font-size: 10px;
-    align-self: flex-start;
-    z-index: 10;
-}
-
-ul {
     width: 100%;
-    z-index: 5;
-    position: absolute;
-    bottom: 0;
-    align-self: flex-end;
-    list-style-type: none;
-    padding: 3px;
+    height: 100%;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
 }
 
-li {
-    font-size: 10px;
-    text-align: end;
-    word-break: break-all;
+#logoContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 100px;
+    height: 50px;
+    border: 1px solid white;
+}
 
+hr {
+    width: 150px;
+}
+
+.environment-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 800px;
+    perspective-origin: 50% 50%;
+    /* background-color: lime; */
+    width: 100%;
+    height: 80px;
+}
+
+.environment-cube {
+    position: absolute;
+    height: 80px;
+    width: 80px;
+    /* top: 100vh; */
+    transform-style: preserve-3d;
+    transform: rotateY(45deg) rotateX(-20deg) rotateZ(-20deg);
+}
+
+.face {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+}
+
+#environment-back {
+    transform: translateZ(-40px) rotateY(180deg);
+    border: 1px solid white;
+}
+
+#environment-right {
+    transform: translateX(40px) rotateY(-270deg);
+    border: 1px solid white;
+}
+
+#environment-left {
+    transform: translateX(-40px) rotateY(270deg);
+    border: 1px solid white;
+}
+
+#environment-top  {
+    transform: translateY(-40px) rotateX(-90deg) rotateY(180deg);
+    border: 1px solid white;
+}
+
+#environment-bottom {
+    transform: translateY(40px) rotateX(90deg) rotateY(180deg);
+    border: 1px solid white;
+}
+
+#environment-front {
+    transform: translateZ(40px);
+    border: 1px solid white;
+}
+
+#chatContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 35%;
+    /* border: 2px solid lime; */
+}
+
+#responseWrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    height: 50%;
+    border: 3px solid white;
+    border-bottom: none;
+    font-size: 30px;
+}
+
+@keyframes fade {
+    0%    {opacity: 0}
+    100%  {opacity: 1}
+}
+
+#response {
+    display: none;
+    animation: fade 0.7s linear;
+    text-align: center;
+    /* transition: opacity 0.7s linear; */
+    /* text-shadow: white 0px 0px 15px; */
+}
+
+#inputWrap {
+    display: flex;
+    align-items: center;
+    width: 80%;
+    height: 50%;
+    border: 3px solid white;
+    overflow: scroll;
+}
+
+textarea {
+    width: 98%;
+    height: 30px;
+    font-size: 30px;
+    resize: none;
+    border: none;
+    outline: none;
+    text-align: center;
+    background-color: transparent;
+    transition: opacity 0.7s linear;
+    /* text-shadow: white 0px 0px 15px; */
+    /* background-color: lime; */
+}
+
+#square {
+    width: 50px;
+    height: 50px;
+    border: 1px solid white;
+}
+
+canvas {
+    /* background-color: white; */
+    /* background-color: lime; */
+}
+
+#square img, .face img {
+    width: 100%;
 }
 
 .ai {
@@ -75,35 +174,3 @@ li {
     color: blue;
     text-shadow: 0px 0px 2px yellowgreen;
 }
-
-#inputWrap {
-    display: flex;
-    width: 663px;
-    height: 30px;
-}
-
-input {
-    display: inline-block;
-    outline: none;
-    border: 4px silver ridge;
-    background-color: rgba(200, 79, 160, 0.4);
-    padding: 2px 3px;
-    margin: 3px 0px;
-    font-size: 10px;
-    width: 618px;
-}
-
-button {
-    display: inline-block;
-    width: 30px;
-    border: 4px silver ridge;
-    background-color: rgba(200, 79, 160, 0.4);
-    outline: none;
-    padding: 2px 3px;
-    margin: 3px 0px 0px 3px;
-    font-size: 10px;
-    height: 24px;
-    cursor: pointer;
-}
-
-

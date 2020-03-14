@@ -12,19 +12,42 @@
         <link rel="stylesheet" href="./style.css">
     </head>
     <body>
-        
-        <div id="chatWrap">
-            <h1>latent_space</h1>
-            <ul>
-            </ul>
+
+        <div id="logoContainer">
+            <p>LATENT</p>
+            <hr>
+            <p>SPACE</p>
         </div>
-        <div id="inputWrap">
-            <input autofocus type="text">
-            <button>:)</button>
+
+        <div class="environment-wrap">
+            <div class="environment-cube">
+                <div class="face" id="environment-front"><img src="./square.png"></div>
+                <div class="face" id="environment-back"><img src="./square.png"></div>
+                <div class="face" id="environment-top"><img src="./square.png"></div>
+                <div class="face" id="environment-bottom"><img src="./square.png"></div>
+                <div class="face" id="environment-left"><img src="./square.png"></div>
+                <div class="face" id="environment-right"><img src="./square.png"></div>
+            </div>
         </div>
-        
+
+        <div id="chatContainer">
+            <div id="responseWrap">
+                <p id="response">hello</p>
+            </div>
+            <div id="inputWrap">
+                <textarea autofocus name="name" rows="8" cols="80"></textarea>
+            </div>
+        </div>
+
+        <div id="square">
+            <!-- <img src="./square.png"> -->
+            <canvas id="canvas" width="50" height="50"></canvas>
+        </div>
+
         <script src="/socket.io/socket.io.js"></script>
         <script src="./axios.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <script src="./autosize.js"></script>
         <script src="./script.js" async defer></script>
     </body>
 </html>
