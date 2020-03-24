@@ -32,7 +32,8 @@ function handleMessage(id, message) {
             } else {
                 // TODO: insert into dynamodb (use socket.lexId as the primary partition key)
                 // TODO: the result also returns the slot values (eg, name, interest, etc...) > when uploading to database create a property for these slots
-                resolve({success: true, message: data.message});
+                console.log(data.sentimentResponse);
+                resolve({success: true, sentiment: data.sentimentResponse});
             }
         });
 

@@ -26,12 +26,12 @@ io.on("connection", function(socket) {
 
     socket.on('send_message', message => {
         handleMessage(socket.lexId, message).then(result => {
-            const { success, message } = result;
+            const { success, sentiment } = result;
             if (!success) {
                 console.error('lex is returning error');
             };
             setTimeout(() => {
-                socket.emit('response', {success: success, message: message});
+                socket.emit('response', {success: success, sentiment: sentiment});
             }, rando(500, 2000));
         });
     });

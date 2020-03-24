@@ -14,19 +14,13 @@
     <body>
 
         <div id="logoContainer">
-            <p>LATENT</p>
-            <hr>
-            <p>SPACE</p>
+            <img src="/assets/logo.png">
         </div>
 
-        <div class="environment-wrap">
-            <div class="environment-cube">
-                <div class="face" id="environment-front"><img src="./square.png"></div>
-                <div class="face" id="environment-back"><img src="./square.png"></div>
-                <div class="face" id="environment-top"><img src="./square.png"></div>
-                <div class="face" id="environment-bottom"><img src="./square.png"></div>
-                <div class="face" id="environment-left"><img src="./square.png"></div>
-                <div class="face" id="environment-right"><img src="./square.png"></div>
+        <div id="runwayConatiner">
+            <div>
+                <!-- <video src="/assets/runway1X.mp4" playsinline autoplay loop muted></video> -->
+                <img id="runway" src="/assets/runway1.gif">
             </div>
         </div>
 
@@ -37,11 +31,11 @@
             <div id="inputWrap">
                 <textarea autofocus name="name" rows="8" cols="80"></textarea>
             </div>
+            <div id="send">></div>
         </div>
 
         <div id="square">
-            <!-- <img src="./square.png"> -->
-            <canvas id="canvas" width="50" height="50"></canvas>
+            <img src="assets/square.png">
         </div>
 
         <script src="/socket.io/socket.io.js"></script>
