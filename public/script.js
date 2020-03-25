@@ -49,21 +49,27 @@
     }
 
     function sendMessage(message) {
+        console.log('sending this message', message)
         paused = true;
         socket.emit('send_message', message);
     };
 
     function inputEvent(e, type) {
+        console.log('here boi', type, e.keyCode);
         if (e.type === 'keydown' && e.keyCode === 13 || type === 'button') {
             if (paused) return;
             if (!ta.value || !ta.value.length || /^\s+$/.test(ta.value)) return;
+            let question = response.innerText
+                .replace(/\s+/g, " ")
+                .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+                .trim();
             let message = ta.value
-            .replace(/\s+/g, " ")
-            .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-            .trim();
+                .replace(/\s+/g, " ")
+                .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+                .trim();
             lastMessage = message;
             thinkingInt = setInterval(thinking, 250);
-            sendMessage(message);
+            sendMessage({  question, message });
             setTimeout(() => {
                 ta.placeholder = '';
                 ta.value = '';
@@ -79,13 +85,11 @@
     }
 
     function thinking() {
-        console.log('think');
         response.innerText = thinkingArr[thinkingCount];
         thinkingCount += 1;
         if (thinkingCount === 3) {
             thinkingCount = 0;
         };
-        console.log(thinkingCount);
     }
 
     function rando(max, min) {
@@ -95,12 +99,13 @@
     // event_listeners
     document.addEventListener('keydown', (e) => inputEvent(e, 'enter'));
     send.addEventListener('touchstart', (e) => inputEvent(e, 'button'));
+    send.addEventListener('click', (e) => inputEvent(e, 'button'));
     window.addEventListener('resize', moveSend);
 
     // socket
     // TODO: the socket will need to be changed when it is running of heroku
-    // var socket = io.connect("http://localhost:8080");
-    var socket = io.connect("http://192.168.1.158:8080");
+    var socket = io.connect("http://localhost:8080");
+    // var socket = io.connect("http://192.168.1.158:8080");
     // var socket = io.connect("https://latentspace.herokuapp.com/");
 
     socket.on('hi_there', data => {
