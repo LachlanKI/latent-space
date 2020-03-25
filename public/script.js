@@ -14,7 +14,8 @@
     var thinkingCount = 0;
     var thinkingInt;
     var questions = {
-        creativity: ['How do you define creativity?', 'Should AI be used in the creative sphere?']
+        creativity: ['How do you define creativity?', 'Should AI be used in the creative sphere?', 'Will AI be able to create in the same way as us?', 'How would you define creativity?', 'Have you ever worked with AI in your creative practice?', 'Do you work with digital?', 'Would you work with AI?', 'Can AI be creative?', 'Have you seen any AI artwork?', 'Do you think AI has imagination?', 'Have you ever worked with AI?'],
+        fear: ['Are people more scared about the climate crisis or technology?']
     }
 
     setTimeout(() => {
@@ -99,8 +100,8 @@
     // socket
     // TODO: the socket will need to be changed when it is running of heroku
     // var socket = io.connect("http://localhost:8080");
-    // var socket = io.connect("http://192.168.1.158:8080");
-    var socket = io.connect("https://latentspace.herokuapp.com/");
+    var socket = io.connect("http://192.168.1.158:8080");
+    // var socket = io.connect("https://latentspace.herokuapp.com/");
 
     socket.on('hi_there', data => {
         const { message } = data;
