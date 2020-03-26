@@ -114,7 +114,7 @@ body {
     border: 3px solid white;
     border-bottom: none;
     font-size: 20px;
-    overflow: scroll;
+    overflow: auto;
 }
 
 @keyframes fade {
@@ -137,7 +137,7 @@ body {
     height: 50%;
     /* min-height: 120px; */
     border: 3px solid white;
-    overflow: scroll;
+    overflow: auto;
 }
 
 textarea {
