@@ -146,7 +146,8 @@
     // other
     var whichGif = rando(2, 1);
     runway.src = `/assets/runway${whichGif}.gif`;
-    background.src = `/assets/runway${whichGif}.gif`;
+    background.style.background = `url(/assets/runway${whichGif}.gif) no-repeat center center fixed`;
+    background.style.backgroundSize = `cover`;
     if (window.innerWidth > 500) {
         send.style.right = `47px`;
     } else {
