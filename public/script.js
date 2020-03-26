@@ -22,6 +22,7 @@
         neutral: 0,
         negative: 0
     }
+    var sentimentOverall = null;
 
     setTimeout(() => {
         response.style.display = 'block';
@@ -44,7 +45,15 @@
             sentimentObj.negative++;
             runway.style.filter = `hue-rotate(-200deg)`;
         };
-        console.log(sentimentObj);
+        sentimentOverall = Object.keys(sentimentObj).reduce((positive, negative) => sentimentObj[positive] > sentimentObj[negative] ? positive : negative);
+        console.log(sentimentObj, sentimentOverall);
+        if (sentimentOverall === 'positive') {
+            document.body.style.backgroundColor = '#1f2952';
+        } else if (sentimentOverall === 'neutral') {
+            document.body.style.backgroundColor = 'black';
+        } else if (sentimentOverall === 'negative') {
+            document.body.style.backgroundColor = '#471d1d';
+        }
         clearInterval(thinkingInt);
         response.style.display = 'none';
         // response.innerText = message;
@@ -116,9 +125,9 @@
 
     // socket
     // TODO: the socket will need to be changed when it is running of heroku
-    // var socket = io.connect("http://localhost:8080");
+    var socket = io.connect("http://localhost:8080");
     // var socket = io.connect("http://192.168.1.158:8080");
-    var socket = io.connect("https://latentspace.herokuapp.com/");
+    // var socket = io.connect("https://latentspace.herokuapp.com/");
 
     socket.on('hi_there', data => {
         const { message } = data;
