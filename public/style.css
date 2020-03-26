@@ -154,6 +154,14 @@ textarea {
     /* background-color: lime; */
 }
 
+#response::-webkit-scrollbar, textarea::-webkit-scrollbar {
+  display: none;
+}
+
+#response, textarea {
+  -ms-overflow-style: none;
+}
+
 #send {
     display: flex;
     justify-content: center;
