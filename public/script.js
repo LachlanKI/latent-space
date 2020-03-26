@@ -3,6 +3,7 @@
     // vars
     let paused = true;
     var runway = document.getElementById('runway');
+    var background = document.getElementById('background');
     let input = document.getElementsByTagName("input")[0];
     let send = document.getElementById("send");
     var ta = document.getElementsByTagName('textarea')[0];
@@ -48,11 +49,11 @@
         sentimentOverall = Object.keys(sentimentObj).reduce((positive, negative) => sentimentObj[positive] > sentimentObj[negative] ? positive : negative);
         console.log(sentimentObj, sentimentOverall);
         if (sentimentOverall === 'positive') {
-            document.body.style.backgroundColor = '#1f2952';
+            background.style.filter = `hue-rotate(200deg)`;
         } else if (sentimentOverall === 'neutral') {
-            document.body.style.backgroundColor = 'black';
+            background.style.filter = `hue-rotate(0deg)`;
         } else if (sentimentOverall === 'negative') {
-            document.body.style.backgroundColor = '#471d1d';
+            background.style.filter = `hue-rotate(-200deg)`;
         }
         clearInterval(thinkingInt);
         response.style.display = 'none';
@@ -143,7 +144,9 @@
     socket.emit('hello');
 
     // other
-    runway.src = `/assets/runway${rando(2, 1)}.gif`;
+    var whichGif = rando(2, 1);
+    runway.src = `/assets/runway${whichGif}.gif`;
+    background.src = `/assets/runway${whichGif}.gif`;
     if (window.innerWidth > 500) {
         send.style.right = `47px`;
     } else {
