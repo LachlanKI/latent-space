@@ -9,13 +9,18 @@
     var response = document.getElementById('response');
     autosize(ta);
     var lastMessage = null;
-    var hue = 0;
+    // var hue = 0;
     var thinkingArr = ['.', '. .', '. . .'];
     var thinkingCount = 0;
     var thinkingInt;
     var questions = {
         creativity: ['How do you define creativity?', 'Should AI be used in the creative sphere?', 'Will AI be able to create in the same way as us?', 'How would you define creativity?', 'Have you ever worked with AI in your creative practice?', 'Do you work with digital?', 'Would you work with AI?', 'Can AI be creative?', 'Have you seen any AI artwork?', 'Do you think AI has imagination?', 'Have you ever worked with AI?'],
         fear: ['Are people more scared about the climate crisis or technology?']
+    }
+    var sentimentObj = {
+        positive: 0,
+        neutral: 0,
+        negative: 0
     }
 
     setTimeout(() => {
@@ -27,12 +32,19 @@
     function responseReceived(sentiment) {
         // console.log(sentiment.sentimentScore);
         if (sentiment.sentimentLabel === 'POSITIVE') {
-            hue += 20;
-            runway.style.filter = `hue-rotate(${hue}deg)`;
+            // hue += 20;
+            sentimentObj.positive++;
+            runway.style.filter = `hue-rotate(200deg)`;
+        } else if (sentiment.sentimentLabel === 'NEUTRAL') {
+            // hue -= 20;
+            sentimentObj.neutral++;
+            runway.style.filter = `hue-rotate(0deg)`;
         } else if (sentiment.sentimentLabel === 'NEGATIVE') {
-            hue -= 20;
-            runway.style.filter = `hue-rotate(${hue}deg)`;
+            // hue -= 20;
+            sentimentObj.negative++;
+            runway.style.filter = `hue-rotate(-200deg)`;
         };
+        console.log(sentimentObj);
         clearInterval(thinkingInt);
         response.style.display = 'none';
         // response.innerText = message;
@@ -55,7 +67,7 @@
     };
 
     function inputEvent(e, type) {
-        console.log('here boi', type, e.keyCode);
+        // console.log('here boi', type, e.keyCode);
         if (e.type === 'keydown' && e.keyCode === 13 || type === 'button') {
             if (paused) return;
             if (!ta.value || !ta.value.length || /^\s+$/.test(ta.value)) return;
