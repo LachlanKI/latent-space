@@ -2,28 +2,31 @@
 
     // vars
     let paused = true;
-    var runway = document.getElementById('runway');
-    var background = document.getElementById('background');
+    let runway = document.getElementById('runway');
+    let background = document.getElementById('background');
     let input = document.getElementsByTagName("input")[0];
     let send = document.getElementById("send");
-    var ta = document.getElementsByTagName('textarea')[0];
-    var response = document.getElementById('response');
+    let ta = document.getElementsByTagName('textarea')[0];
+    let response = document.getElementById('response');
     autosize(ta);
-    var lastMessage = null;
+    let lastMessage = null;
     // var hue = 0;
-    var thinkingArr = ['.', '. .', '. . .'];
-    var thinkingCount = 0;
-    var thinkingInt;
-    var questions = {
+    let thinkingArr = ['.', '. .', '. . .'];
+    let thinkingCount = 0;
+    let thinkingInt;
+    let questions = {
         creativity: ['How do you define creativity?', 'Should AI be used in the creative sphere?', 'Will AI be able to create in the same way as us?', 'How would you define creativity?', 'Have you ever worked with AI in your creative practice?', 'Do you work with digital?', 'Would you work with AI?', 'Can AI be creative?', 'Have you seen any AI artwork?', 'Do you think AI has imagination?', 'Have you ever worked with AI?'],
         fear: ['Are people more scared about the climate crisis or technology?']
     }
-    var sentimentObj = {
+    let sentimentObj = {
         positive: 0,
         neutral: 0,
         negative: 0
     }
-    var sentimentOverall = null;
+    let sentimentOverall = null;
+    let enterButton = document.getElementById("enter-button");
+    let infoWrapper = document.getElementById("info-wrapper");
+    let contentWrapper = document.getElementById("content-wrapper");
 
     setTimeout(() => {
         response.style.display = 'block';
@@ -103,8 +106,8 @@
     function moveSend() {
         if (window.innerWidth < 500) {
             send.style.right = `${(window.innerWidth * 0.1) - 3}px`;
-        }
-    }
+        };
+    };
 
     function thinking() {
         response.innerText = thinkingArr[thinkingCount];
@@ -112,17 +115,30 @@
         if (thinkingCount === 3) {
             thinkingCount = 0;
         };
-    }
+    };
 
     function rando(max, min) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
+    };
+
+    function enterEvent() {
+        console.log('enter event');
+        infoWrapper.style.transform = 'rotateY(180deg) translateZ(1px)';
+        infoWrapper.style.zIndex = 0;
+        infoWrapper.style.opacity = 0;
+        infoWrapper.style.pointerEvents = 'none';
+        contentWrapper.style.transform = 'rotateY(360deg)';
+        contentWrapper.style.zIndex = 1;
+        contentWrapper.style.opacity = 1;
+        infoWrapper.style.pointerEvents = 'auto';
+    };
 
     // event_listeners
     document.addEventListener('keydown', (e) => inputEvent(e, 'enter'));
     send.addEventListener('touchstart', (e) => inputEvent(e, 'button'));
     send.addEventListener('click', (e) => inputEvent(e, 'button'));
     window.addEventListener('resize', moveSend);
+    enterButton.addEventListener('click', enterEvent);
 
     // socket
     // TODO: the socket will need to be changed when it is running of heroku
