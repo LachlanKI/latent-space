@@ -130,7 +130,7 @@
         contentWrapper.style.transform = 'rotateY(360deg)';
         contentWrapper.style.zIndex = 1;
         contentWrapper.style.opacity = 1;
-        infoWrapper.style.pointerEvents = 'auto';
+        infoWrapper.style.pointerEvents = 'none';
     };
 
     // event_listeners
