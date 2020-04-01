@@ -17,15 +17,14 @@
 html {
     display: flex;
     justify-content: center;
-    height: 100vh;
     width: 100vw;
+    height: 100vh;
 }
 
 body {
-    /* width: 100%; */
-    /* height: 100%; */
-    background-color: black;
-    /* background: linear-gradient(black, black, black, black, black, white); */
+    width: 100%;
+    height: 100%;
+    background-color: lime;
     transition: background-color 0.5s linear;
     opacity: 0.9;
     display: flex;
@@ -40,7 +39,7 @@ body {
     height: 100vh;
     transition: filter 0.5s linear;
     overflow: hidden;
-    background: url(/assets/runway1.gif) no-repeat center center fixed;
+    background: url(/assets/runway1.gif) no-repeat fixed center center;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -49,27 +48,35 @@ body {
 
 #perspective {
     display: flex;
-    /* height: 100%; */
     align-items: center;
     justify-content: center;
     width: 100%;
+    /* height: 100vh; */
     perspective: 1500px;
+    /* background-color: red; */
 }
 
 #info-wrapper {
-    opacity: 1;
-    pointer-events: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
     position: absolute;
-    width: calc(100% - 20px);
+    /* z-index: 1; */
+    width: 100vw;
+    height: 100vh;
+    opacity: 1;
+    pointer-events: auto;
+    /* width: calc(100% - 20px); */
     /* height: calc(100% - 20px); */
     /* background-color: rgba(30, 0, 30, 1); */
-    z-index: 1;
     transition: all 4s;
-    transform: rotateY(0deg) translateZ(1px);
+    transform: rotateY(0deg) translateZ(0px);
+}
+
+#info-wrapper img {
+    width: 47%;
+    margin-bottom: 30px;
 }
 
 #info-wrapper h4 {
@@ -83,34 +90,38 @@ body {
 }
 
 #info-wrapper button {
-    color: rgba(30, 0, 30, 1);
     outline: none;
-    background-color: plum;
-    border-radius: 1px;
-    border: 1px dashed rgba(30, 0, 30, 1);
+    background-color: transparent;
+    font-size: 16px;
+    border: 2px solid white;
+    /* margin-top: 30px; */
+    cursor: pointer;
+    padding: 8px;
 }
 
 #info-wrapper button:active {
-    background-color: violet;
+    background-color: black;
 }
 
 #content-wrapper {
-    opacity: 0;
-    pointer-events: none;
     /* display: flex; */
     /* flex-direction: column; */
     /* align-items: center; */
     position: absolute;
-    width: calc(100% - 20px);
+    width: 100%;
+    opacity: 0;
+    pointer-events: none;
+    /* width: calc(100% - 20px); */
     /* height: calc(100% - 20px); */
     transform: rotateY(180deg) translateZ(3px);
     transition: all 4s;
 }
 
 #logo {
-    display: block; 
+    display: block;
     width: 150px;
-    margin: 0 auto 40px auto;
+    margin: 0px auto 40px auto;
+    cursor: pointer;
 }
 
 #runwayConatiner {
@@ -228,8 +239,14 @@ textarea {
     border: 3px solid white;
     border-top: none;
     font-size: 1.2em;
-    /* background-color: black; */
+    background-color: transparent;
     pointer-events: auto;
+    outline: none;
+    cursor: pointer;
+}
+
+#send:active {
+    background-color: black;
 }
 
 #square {

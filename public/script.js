@@ -2,6 +2,7 @@
 
     // vars
     let paused = true;
+    let logo = document.getElementById('logo');
     let runway = document.getElementById('runway');
     let background = document.getElementById('background');
     let input = document.getElementsByTagName("input")[0];
@@ -121,16 +122,16 @@
         return Math.floor(Math.random() * (max - min + 1)) + min;
     };
 
-    function enterEvent() {
-        console.log('enter event');
-        infoWrapper.style.transform = 'rotateY(180deg) translateZ(1px)';
-        infoWrapper.style.zIndex = 0;
-        infoWrapper.style.opacity = 0;
-        infoWrapper.style.pointerEvents = 'none';
-        contentWrapper.style.transform = 'rotateY(360deg)';
-        contentWrapper.style.zIndex = 1;
-        contentWrapper.style.opacity = 1;
-        contentWrapper.style.pointerEvents = 'auto';
+    function enterEvent(direction) {
+        // console.log('enter event');
+        infoWrapper.style.transform = direction ? 'rotateY(180deg) translateZ(1px)' : 'rotateY(0deg) translateZ(1px)';
+        infoWrapper.style.zIndex = direction ? 0 : 1;
+        infoWrapper.style.opacity = direction ? 0 : 1;
+        infoWrapper.style.pointerEvents = direction ? 'none' : 'auto';
+        contentWrapper.style.transform = direction ? 'rotateY(360deg)' : 'rotateY(180deg)';
+        contentWrapper.style.zIndex = direction ? 1 : 0;
+        contentWrapper.style.opacity = direction ? 1 : 0;
+        contentWrapper.style.pointerEvents = direction ? 'auto' : 'none';
     };
 
     // event_listeners
@@ -138,7 +139,8 @@
     send.addEventListener('touchstart', (e) => inputEvent(e, 'button'));
     send.addEventListener('click', (e) => inputEvent(e, 'button'));
     window.addEventListener('resize', moveSend);
-    enterButton.addEventListener('click', enterEvent);
+    enterButton.addEventListener('click', () => enterEvent(true));
+    logo.addEventListener('click', () => enterEvent(false));
 
     // socket
     // TODO: the socket will need to be changed when it is running of heroku
