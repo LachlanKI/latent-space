@@ -38,27 +38,24 @@
     function responseReceived(sentiment) {
         // console.log(sentiment.sentimentScore);
         if (sentiment.sentimentLabel === 'POSITIVE') {
-            // hue += 20;
             sentimentObj.positive++;
-            runway.style.filter = `hue-rotate(200deg)`;
+            background.style.filter = `hue-rotate(200deg)`;
         } else if (sentiment.sentimentLabel === 'NEUTRAL') {
-            // hue -= 20;
             sentimentObj.neutral++;
-            runway.style.filter = `hue-rotate(0deg)`;
+            background.style.filter = `hue-rotate(0deg)`;
         } else if (sentiment.sentimentLabel === 'NEGATIVE') {
-            // hue -= 20;
             sentimentObj.negative++;
-            runway.style.filter = `hue-rotate(-200deg)`;
+            background.style.filter = `hue-rotate(-200deg)`;
         };
         sentimentOverall = Object.keys(sentimentObj).reduce((positive, negative) => sentimentObj[positive] > sentimentObj[negative] ? positive : negative);
         console.log(sentimentObj, sentimentOverall);
         if (sentimentOverall === 'positive') {
-            background.style.filter = `hue-rotate(200deg)`;
+            runway.style.filter = `hue-rotate(200deg)`;
         } else if (sentimentOverall === 'neutral') {
-            background.style.filter = `hue-rotate(0deg)`;
+            runway.style.filter = `hue-rotate(0deg)`;
         } else if (sentimentOverall === 'negative') {
-            background.style.filter = `hue-rotate(-200deg)`;
-        }
+            runway.style.filter = `hue-rotate(-200deg)`;
+        };
         clearInterval(thinkingInt);
         response.style.display = 'none';
         // response.innerText = message;
@@ -81,7 +78,6 @@
     };
 
     function inputEvent(e, type) {
-        // console.log('here boi', type, e.keyCode);
         if (e.type === 'keydown' && e.keyCode === 13 || type === 'button') {
             if (paused) return;
             if (!ta.value || !ta.value.length || /^\s+$/.test(ta.value)) return;
@@ -123,7 +119,6 @@
     };
 
     function enterEvent(direction) {
-        // console.log('enter event');
         infoWrapper.style.transform = direction ? 'rotateY(180deg) translateZ(1px)' : 'rotateY(0deg) translateZ(1px)';
         infoWrapper.style.zIndex = direction ? 0 : 1;
         infoWrapper.style.opacity = direction ? 0 : 1;
