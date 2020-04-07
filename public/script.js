@@ -5,20 +5,16 @@
     let logo = document.getElementById('logo');
     let runway = document.getElementById('runway');
     let background = document.getElementById('background');
+    let end = document.getElementById('end');
     let input = document.getElementsByTagName("input")[0];
     let send = document.getElementById("send");
     let ta = document.getElementsByTagName('textarea')[0];
     let response = document.getElementById('response');
     autosize(ta);
     let lastMessage = null;
-    // var hue = 0;
     let thinkingArr = ['.', '. .', '. . .'];
     let thinkingCount = 0;
     let thinkingInt;
-    let questions = {
-        creativity: ['How do you define creativity?', 'Should AI be used in the creative sphere?', 'Will AI be able to create in the same way as us?', 'How would you define creativity?', 'Have you ever worked with AI in your creative practice?', 'Do you work with digital?', 'Would you work with AI?', 'Can AI be creative?', 'Have you seen any AI artwork?', 'Do you think AI has imagination?', 'Have you ever worked with AI?'],
-        fear: ['Are people more scared about the climate crisis or technology?']
-    }
     let sentimentObj = {
         positive: 0,
         neutral: 0,
@@ -28,15 +24,18 @@
     let enterButton = document.getElementById("enter-button");
     let infoWrapper = document.getElementById("info-wrapper");
     let contentWrapper = document.getElementById("content-wrapper");
+    let firstEnter = false;
 
-    setTimeout(() => {
-        response.style.display = 'block';
-    }, 800);
+    let whichConvo;
+    let convoPos = 0;
+    let conversations = {
+        1: ['How do you define creativity?', 'Do you think we can still create anything new or original?', 'How do you differentiate between creativity and imagination?', 'How do you define imagination?', 'What part of the creative process do you find most challenging?'],
+        2: ['Can AI be creative?', 'Can AI be as creative as humans?', 'Do you think AI can have imagination?', 'Do you think AI should be used in the creative sphere?', 'How do you feel about AI being used in the creative sphere?', 'Do you think AI can benefit human creativity?'],
+        3: ['Have you ever (intentionally) worked with AI?', 'Why have / haven’t you?', 'Would you want to work with AI creatively?', 'Would you know how to use AI in your creative process?', 'What appeals / doesn’t appeal to you about working with AI?', 'Have you seen much AI generated/aided work?', 'How do you feel about AI generated/aided work?']
+    }
 
     // functions
-
     function responseReceived(sentiment) {
-        // console.log(sentiment.sentimentScore);
         if (sentiment.sentimentLabel === 'POSITIVE') {
             sentimentObj.positive++;
             background.style.filter = `hue-rotate(200deg)`;
@@ -56,19 +55,22 @@
         } else if (sentimentOverall === 'negative') {
             runway.style.filter = `hue-rotate(-200deg)`;
         };
+
         clearInterval(thinkingInt);
         response.style.display = 'none';
-        // response.innerText = message;
-
-        if (lastMessage.includes('hey') || lastMessage.includes('heya') || lastMessage.includes('hello') || lastMessage.includes('hi')) {
-            response.innerText = questions.creativity[rando(questions.creativity.length - 1, 0)];
+        convoPos++;
+        if (convoPos <= conversations[whichConvo].length - 1) {
+            response.innerText = conversations[whichConvo][convoPos];
+            setTimeout(() => {
+                response.style.display = 'block';
+            }, 100);
         } else {
-            response.innerText = 'sorry can you please repeat that?';
+            contentWrapper.style.opacity = '0';
+            setTimeout(() => {
+                end.style.opacity = '1';
+            }, 4000);
         };
 
-        setTimeout(() => {
-            response.style.display = 'block';
-        }, 100);
     }
 
     function sendMessage(message) {
@@ -127,6 +129,13 @@
         contentWrapper.style.zIndex = direction ? 1 : 0;
         contentWrapper.style.opacity = direction ? 1 : 0;
         contentWrapper.style.pointerEvents = direction ? 'auto' : 'none';
+        if (!firstEnter) {
+            whichConvo = rando(3, 1);
+            response.innerText = conversations[whichConvo][0];
+            setTimeout(() => {
+                response.style.display = 'block';
+            }, 3500);
+        };
     };
 
     // event_listeners
@@ -157,7 +166,7 @@
     socket.emit('hello');
 
     // other
-    var whichGif = rando(2, 1);
+    let whichGif = rando(2, 1);
     runway.src = `/assets/runway${whichGif}.gif`;
     background.style.background = `url(/assets/runway${whichGif}.gif) no-repeat center center fixed`;
     background.style.backgroundSize = `cover`;
@@ -166,8 +175,6 @@
     } else {
         send.style.right = `${(window.innerWidth * 0.1) - 3}px`;
     };
-
-    // chat
 
 
 })();
