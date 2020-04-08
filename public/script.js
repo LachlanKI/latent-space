@@ -29,9 +29,102 @@
     let whichConvo;
     let convoPos = 0;
     let conversations = {
-        1: ['How do you define creativity?', 'Do you think we can still create anything new or original?', 'How do you differentiate between creativity and imagination?', 'How do you define imagination?', 'What part of the creative process do you find most challenging?'],
-        2: ['Can AI be creative?', 'Can AI be as creative as humans?', 'Do you think AI can have imagination?', 'Do you think AI should be used in the creative sphere?', 'How do you feel about AI being used in the creative sphere?', 'Do you think AI can benefit human creativity?'],
-        3: ['Have you ever (intentionally) worked with AI?', 'Why have / haven’t you?', 'Would you want to work with AI creatively?', 'Would you know how to use AI in your creative process?', 'What appeals / doesn’t appeal to you about working with AI?', 'Have you seen much AI generated/aided work?', 'How do you feel about AI generated/aided work?']
+        1: [
+                {
+                    q: 'How do you define creativity?',
+                    type: '3max',
+                    options: null
+                },
+                {
+                    q: 'Do you think we can still create anything new or original?',
+                    type: 'option',
+                    options: ['Yes', 'No', 'Not sure']
+                },
+                {
+                    q: 'How do you differentiate between creativity and imagination?',
+                    type: 'free',
+                    options: null
+                },
+                {
+                    q: 'How do you define imagination?',
+                    type: '3max',
+                    options: null
+                },
+                {
+                    q: 'What part of the creative process do you find most challenging?',
+                    type: 'free',
+                    options: null
+                }
+            ],
+        2: [
+                {
+                    q: 'Can AI be creative?',
+                    type:'option',
+                    options: ['Yes', 'No', 'Not sure']
+                },
+                {
+                    q: 'Can AI be as creative as humans?',
+                    type: 'free',
+                    options: null
+                },
+                {
+                    q: 'Do you think AI can have imagination?',
+                    type: 'option',
+                    options: ['Yes', 'No', 'Not sure']
+                },
+                {
+                    q: 'Do you think AI should be used in the creative sphere?',
+                    type: 'option',
+                    options: ['Yes', 'No', 'Not sure']
+                },
+                {
+                    q: 'How do you feel about AI being used in the creative sphere?',
+                    type: 'option',
+                    options: ['😍', '🤔', '😡']
+                },
+                {
+                    q: 'Do you think AI can benefit human creativity?',
+                    type: 'free',
+                    options: 'null'
+                }
+            ],
+        3: [
+            {
+                q: 'Have you ever (intentionally) worked with AI?',
+                type: 'option',
+                options: ['Yes', 'No', 'Not sure']
+            },
+            {
+                q:'Why have / haven’t you?',
+                type: 'free',
+                options: null
+            },
+            {
+                q: 'Would you want to work with AI creatively?',
+                type: 'option',
+                options: ['😍', '🤔', '😡']
+            },
+            {
+                q: 'Would you know how to use AI in your creative process?',
+                type: 'option',
+                options: ['Yes', 'No', 'Not sure']
+            },
+            {
+                q: 'What appeals / doesn’t appeal to you about working with AI?',
+                type: 'free',
+                options: null
+            },
+            {
+                q: 'Have you seen much AI generated/aided work?',
+                type: 'free',
+                options: null
+            },
+            {
+                q: 'How do you feel about AI generated/aided work?',
+                type: 'option',
+                options: ['😍', '🤔', '😡']
+            }
+        ]
     }
 
     // functions
@@ -60,7 +153,7 @@
         response.style.display = 'none';
         convoPos++;
         if (convoPos <= conversations[whichConvo].length - 1) {
-            response.innerText = conversations[whichConvo][convoPos];
+            response.innerText = conversations[whichConvo][convoPos].q;
             setTimeout(() => {
                 response.style.display = 'block';
             }, 100);
@@ -131,10 +224,11 @@
         contentWrapper.style.pointerEvents = direction ? 'auto' : 'none';
         if (!firstEnter) {
             whichConvo = rando(3, 1);
-            response.innerText = conversations[whichConvo][0];
+            response.innerText = conversations[whichConvo][0].q;
             setTimeout(() => {
                 response.style.display = 'block';
             }, 3500);
+            firstEnter = true;
         };
     };
 
