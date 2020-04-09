@@ -237,6 +237,11 @@ textarea {
     border: 3px solid white;
     padding: 2px 10px 2px 10px;
     background-color: transparent;
+    outline: none;
+}
+
+.options:active {
+    background-color: black;
 }
 
 #response::-webkit-scrollbar, textarea::-webkit-scrollbar {
