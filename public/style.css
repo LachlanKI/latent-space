@@ -200,7 +200,7 @@ body {
     align-items: center;
     width: 80%;
     height: 130px;
-    margin: 0 auto 30px auto;
+    margin: -3px auto 30px auto;
     /* min-height: 120px; */
     /* border: 3px solid white; */
     border-top: none;
@@ -208,6 +208,7 @@ body {
 }
 
 textarea {
+    display: none;
     width: 98%;
     height: 20px;
     font-size: 20px;
@@ -220,7 +221,7 @@ textarea {
 }
 
 #optionsWrap {
-    display: flex;
+    display: none;
     /* flex-direction: column; */
     justify-content: space-between;
     align-items: center;

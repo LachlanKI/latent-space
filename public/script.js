@@ -11,7 +11,7 @@
     let ta = document.getElementsByTagName('textarea')[0];
     let response = document.getElementById('response');
     autosize(ta);
-    let lastMessage = null;
+    // let lastMessage = null;
     let thinkingArr = ['.', '. .', '. . .'];
     let thinkingCount = 0;
     let thinkingInt;
@@ -24,6 +24,10 @@
     let enterButton = document.getElementById("enter-button");
     let infoWrapper = document.getElementById("info-wrapper");
     let contentWrapper = document.getElementById("content-wrapper");
+    let inpiutWrap = document.getElementById("inpiutWrap");
+    let optionsWrap = document.getElementById("optionsWrap");
+    let optionsButtons = document.getElementsByClassName('options');
+    let currentResponseType = null;
     let firstEnter = false;
 
     let whichConvo;
@@ -153,6 +157,8 @@
         response.style.display = 'none';
         convoPos++;
         if (convoPos <= conversations[whichConvo].length - 1) {
+            currentResponseType = conversations[whichConvo][convoPos].type;
+            responseSetup();
             response.innerText = conversations[whichConvo][convoPos].q;
             setTimeout(() => {
                 response.style.display = 'block';
@@ -172,27 +178,39 @@
         socket.emit('send_message', message);
     };
 
-    function inputEvent(e, type) {
-        if (e.type === 'keydown' && e.keyCode === 13 || type === 'button') {
-            if (paused) return;
+    function inputEvent(e) {
+        if (paused) return;
+        if (e.type === 'keydown' && e.keyCode !== 13) return;
+        let question, message;
+        if (currentResponseType === 'free' || currentResponseType === '3max') {
             if (!ta.value || !ta.value.length || /^\s+$/.test(ta.value)) return;
-            let question = response.innerText
+            question = response.innerText
                 .replace(/\s+/g, " ")
                 .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
                 .trim();
-            let message = ta.value
+            message = ta.value
                 .replace(/\s+/g, " ")
                 .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
                 .trim();
-            lastMessage = message;
-            thinkingInt = setInterval(thinking, 250);
-            sendMessage({  question, message });
-            setTimeout(() => {
-                ta.placeholder = '';
-                ta.value = '';
-                ta.style.height = '20px';
-            }, 30);
+        } else if (currentResponseType === 'option') {
+            question = response.innerText
+                .replace(/\s+/g, " ")
+                .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+                .trim();
+            message = e.target.innerText
+                .replace(/\s+/g, " ")
+                .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+                .trim();
         };
+            thinkingInt = setInterval(thinking, 250);
+            sendMessage({question, message});
+            setTimeout(() => {
+                if (currentResponseType === 'free' || currentResponseType === '3max') {
+                    ta.placeholder = '';
+                    ta.value = '';
+                    ta.style.height = '20px';
+                };
+            }, 30);
     };
 
     function moveSend() {
@@ -225,6 +243,8 @@
         if (!firstEnter) {
             whichConvo = rando(3, 1);
             response.innerText = conversations[whichConvo][0].q;
+            currentResponseType = conversations[whichConvo][0].type;
+            responseSetup();
             setTimeout(() => {
                 response.style.display = 'block';
             }, 3500);
@@ -232,18 +252,38 @@
         };
     };
 
+    function responseSetup() {
+        if (currentResponseType === 'option') {
+            for (var i = 0; i < optionsButtons.length; i++) {
+                optionsButtons[i].innerText = conversations[whichConvo][convoPos].options[i];
+            };
+            optionsWrap.style.display = 'flex';
+            ta.style.display = 'none';
+            inputWrap.style.border = 'none';
+            send.style.display = 'none';
+        } else {
+            optionsWrap.style.display = 'none';
+            ta.style.display = 'block';
+            inputWrap.style.border = '3px solid white';
+            send.style.display = 'flex';
+        };
+    };
+
     // event_listeners
-    document.addEventListener('keydown', (e) => inputEvent(e, 'enter'));
-    send.addEventListener('touchstart', (e) => inputEvent(e, 'button'));
-    send.addEventListener('click', (e) => inputEvent(e, 'button'));
+    document.addEventListener('keydown', (e) => inputEvent(e));
+    send.addEventListener('touchstart', (e) => inputEvent(e));
+    send.addEventListener('click', (e) => inputEvent(e));
     window.addEventListener('resize', moveSend);
     enterButton.addEventListener('click', () => enterEvent(true));
     logo.addEventListener('click', () => enterEvent(false));
+    for (var i = 0; i < optionsButtons.length; i++) {
+        optionsButtons[i].addEventListener('click', (e) => inputEvent(e));
+    }
 
     // socket
     // TODO: the socket will need to be changed when it is running of heroku
     // var socket = io.connect("http://localhost:8080");
-    // var socket = io.connect("http://192.168.1.158:8080");
+    // var socket = io.connect("http://192.168.0.73:8080");
     var socket = io.connect("https://latentspace.herokuapp.com/");
 
     socket.on('hi_there', data => {
