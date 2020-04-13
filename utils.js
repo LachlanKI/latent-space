@@ -5,7 +5,7 @@ const docClient = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
 
 // NOTE: this will not work without loading the AWS credentials via a '.env' file located in the root of the project
 
-var params = {
+let params = {
     botAlias: "latent_space",
     botName: "drebin",
     inputText: null,
@@ -14,9 +14,11 @@ var params = {
     sessionAttributes: {}
 };
 
-async function ddbPut(id, responseAndAnswer, sentimentObj) {
+let sentimentScoreRegex = /{Positive: ([\w\.-]+),Negative: ([\w\.-]+),Neutral: ([\w\.-]+),Mixed: ([\w\.-]+)}/;
+
+async function ddbPutC(id, dataObj, sentimentObj) {
     let params1 = {
-        TableName: process.env.TABLE_NAME,
+        TableName: process.env.TABLE_NAME_C,
         Key: {
             session_id: id
         }
@@ -24,10 +26,10 @@ async function ddbPut(id, responseAndAnswer, sentimentObj) {
     try {
         let data = await docClient.get(params1).promise();
         if (!data.Item) {
-            let messageWithSentiment = responseAndAnswer;
+            let messageWithSentiment = dataObj;
             messageWithSentiment.sentiment = sentimentObj;
             let params2 = {
-                TableName: process.env.TABLE_NAME,
+                TableName: process.env.TABLE_NAME_C,
                 Item: {
                     session_id: id,
                     created_at: Date.now() + '',
@@ -40,20 +42,20 @@ async function ddbPut(id, responseAndAnswer, sentimentObj) {
                 console.log('something not good ~ 2', err);
             };
         } else {
-            ddbUpdate(id, responseAndAnswer, sentimentObj, data.Item);
+            await ddbUpdateC(id, dataObj, sentimentObj, data.Item);
         }
     } catch (err) {
         console.log('something not good  ~ 1', err);
     }
 };
 
-async function ddbUpdate(id, responseAndAnswer, sentimentObj, currentRow) {
-    let messageWithSentiment = responseAndAnswer;
+async function ddbUpdateC(id, dataObj, sentimentObj, currentRow) {
+    let messageWithSentiment = dataObj;
     messageWithSentiment.sentiment = sentimentObj;
     let newArray = currentRow.arrayOfQA;
     newArray.push(messageWithSentiment);
     let params = {
-        TableName: process.env.TABLE_NAME,
+        TableName: process.env.TABLE_NAME_C,
         Key: {
             session_id: id
         },
@@ -70,12 +72,109 @@ async function ddbUpdate(id, responseAndAnswer, sentimentObj, currentRow) {
     };
 };
 
-function handleMessage(id, responseAndAnswer) {
+async function ddbPutQ(ids, question, sentiment) {
+    let params1 = {
+        TableName: process.env.TABLE_NAME_Q,
+        Key: {
+            question_id: `${ids.sID}_${ids.qID}`
+        }
+    };
+    try {
+        let data = await docClient.get(params1).promise();
+        if (!data.Item) {
+
+            let sentimentScoreMatch = null;
+            if (sentimentScoreRegex.test(sentiment.sentimentScore)) {
+                sentimentScoreMatch = sentiment.sentimentScore.match(sentimentScoreRegex);
+            };
+            if (!sentimentScoreMatch) {
+                return;
+            };
+            
+            let params2 = {
+                TableName: process.env.TABLE_NAME_Q,
+                Item: {
+                    question_id: `${ids.sID}_${ids.qID}`,
+                    created_at: Date.now() + '',
+                    question: question,
+                    times_answered: 1,
+                    positive_label_count: /positive/i.test(sentiment.sentimentLabel) ? 1 : 0,
+                    negative_label_count: /negative/i.test(sentiment.sentimentLabel) ? 1 : 0,
+                    neutral_label_count: /neutral/i.test(sentiment.sentimentLabel) ? 1 : 0,
+                    mixed_label_count: /mixed/i.test(sentiment.sentimentLabel) ? 1 : 0,
+                    positive_total_score: parseFloat(sentimentScoreMatch[1]), 
+                    negative_total_score: parseFloat(sentimentScoreMatch[2]),
+                    neutral_total_score: parseFloat(sentimentScoreMatch[3]),
+                    mixed_total_score: parseFloat(sentimentScoreMatch[4])
+                }
+            };
+
+            try {
+                await docClient.put(params2).promise();
+            } catch (err) {
+                console.log('something not good ~ 5');
+            }
+        } else {
+            await ddbUpdateQ(ids, sentiment, data.Item);
+        };
+    } catch (err) {
+        console.log('something not good ~ 4', err);
+    };
+};
+
+async function ddbUpdateQ(ids, sentiment, currentQuestion) {
+
+    let sentimentScoreMatch = null;
+    if (sentimentScoreRegex.test(sentiment.sentimentScore)) {
+        sentimentScoreMatch = sentiment.sentimentScore.match(sentimentScoreRegex);
+    };
+    if (!sentimentScoreMatch) {
+        return;
+    };
+
+    let params = {
+        TableName: process.env.TABLE_NAME_Q,
+        Key: {
+            question_id: `${ids.sID}_${ids.qID}`
+        },
+        UpdateExpression: `set #ta = :ta, #plc = :plc, #nglc = :nglc, #ntlc = :ntlc, #mlc = :mlc, #pts = :pts, #ngts = :ngts, #ntts = :ntts, #mts = :mts`,
+        ExpressionAttributeNames: {
+            '#ta': 'times_answered',
+            '#plc': 'positive_label_count',
+            '#nglc': 'negative_label_count',
+            '#ntlc': 'neutral_label_count',
+            '#mlc': 'mixed_label_count',
+            '#pts': 'positive_total_score',
+            '#ngts': 'negative_total_score',
+            '#ntts': 'neutral_total_score',
+            '#mts': 'mixed_total_score',
+        },
+        ExpressionAttributeValues: {
+            ':ta': currentQuestion.times_answered + 1,
+            ':plc': /positive/i.test(sentiment.sentimentLabel) ? currentQuestion.positive_label_count + 1 : currentQuestion.positive_label_count,
+            ':nglc': /negative/i.test(sentiment.sentimentLabel) ? currentQuestion.negative_label_count + 1 : currentQuestion.negative_label_count,
+            ':ntlc': /neutral/i.test(sentiment.sentimentLabel) ? currentQuestion.neutral_label_count + 1 : currentQuestion.neutral_label_count,
+            ':mlc': /mixed/i.test(sentiment.sentimentLabel) ? currentQuestion.mixed_label_count + 1 : currentQuestion.mixed_label_count,
+            ':pts': currentQuestion.positive_total_score + parseFloat(sentimentScoreMatch[1]),
+            ':ngts': currentQuestion.negative_total_score + parseFloat(sentimentScoreMatch[2]),
+            ':ntts': currentQuestion.neutral_total_score + parseFloat(sentimentScoreMatch[3]),
+            ':mts': currentQuestion.mixed_total_score + parseFloat(sentimentScoreMatch[4])
+        }
+    };
+
+    try {
+        await docClient.update(params).promise();
+    } catch (err) {
+        console.log('something not good ~ 6', err);
+    };
+};
+
+function handleMessage(id, dataObj) {
     return new Promise((resolve, reject) => {
         var params = {
             botName: "drebin",
             botAlias: "latent_space",
-            inputText: responseAndAnswer.message,
+            inputText: dataObj.message,
             userId: id,
             requestAttributes: {},
             sessionAttributes: {}
@@ -86,14 +185,52 @@ function handleMessage(id, responseAndAnswer) {
                 console.log('lex error... uh oh', err, err.stack);
                 resolve({success: false, message: 'something went wrong.... teeehee :3'});
             } else {
-                // TODO: insert into dynamodb (use socket.lexId as the primary partition key)
-                ddbPut(id, responseAndAnswer, data.sentimentResponse);
-                // TODO: the result also returns the slot values (eg, name, interest, etc...) > when uploading to database create a property for these slots
-                console.log(data.sentimentResponse);
-                resolve({success: true, sentiment: data.sentimentResponse});
-            }
+
+                (async () => {
+                    await ddbPutC(id, dataObj, data.sentimentResponse);
+                    await ddbPutQ(dataObj.ids, dataObj.question, data.sentimentResponse);
+                    resolve({success: true, sentiment: data.sentimentResponse});
+                })();
+            
+            };
         });
 
+    });
+};
+
+async function getQuestionStats(ids) {
+    return new Promise((resolve, reject) => {
+        let params1 = {
+            TableName: process.env.TABLE_NAME_Q,
+            Key: {
+                question_id: `${ids.sID}_${ids.qID}`
+            },
+            ProjectionExpression: '#q, #ta, #plc, #nglc, #ntlc, #mlc, #pts, #ngts, #ntts, #mts',
+            ExpressionAttributeNames: {
+                '#q': 'question',
+                '#ta': 'times_answered',
+                '#plc': 'positive_label_count',
+                '#nglc': 'negative_label_count',
+                '#ntlc': 'neutral_label_count',
+                '#mlc': 'mixed_label_count',
+                '#pts': 'positive_total_score',
+                '#ngts': 'negative_total_score',
+                '#ntts': 'neutral_total_score',
+                '#mts': 'mixed_total_score',
+            }
+        };
+
+        try {
+            docClient.get(params1).promise().then(data => {
+                if (!data.Item) {
+                    resolve({success: false});
+                } else {
+                    resolve({success: true, data: data.Item});
+                }
+            });
+        } catch (err) {
+            console.log('something not good ~ 7', err);
+        }
     });
 };
 
@@ -105,5 +242,6 @@ function rando(min, max) {
 
 module.exports = {
     handleMessage,
+    getQuestionStats,
     rando
 };

@@ -10,7 +10,7 @@ const io = require("socket.io")(server);
 const { v4 } = require('uuid');
 
 // functions
-const { handleMessage, rando } = require("./utils");
+const { handleMessage, getQuestionStats, rando } = require("./utils");
 
 // middleware
 app.use(express.static("./public"));
@@ -24,8 +24,8 @@ io.on("connection", function(socket) {
         socket.emit('hi_there', {success: true, message: 'hello....... uWu :3'});
     });
 
-    socket.on('send_message', responseAndAnswer => {
-        handleMessage(socket.lexId, responseAndAnswer).then(result => {
+    socket.on('send_message', data => {
+        handleMessage(socket.lexId, data).then(result => {
             const { success, sentiment } = result;
             if (!success) {
                 console.error('lex is returning error');
@@ -34,6 +34,14 @@ io.on("connection", function(socket) {
                 socket.emit('response', {success: success, sentiment: sentiment});
             }, rando(500, 2000));
         });
+    });
+
+    socket.on('fetch_question_stats', data => {
+        console.log('in fetch_question_stats', data);
+        (async () => {
+            let result = await getQuestionStats(data.ids);
+            socket.emit('q_response', result);
+        })();
     });
 
 });

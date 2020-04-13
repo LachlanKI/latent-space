@@ -34,102 +34,142 @@
     let convoPos = 0;
     let conversations = {
         1: [
-                {
-                    q: 'How do you define creativity?',
-                    type: '3max',
-                    options: null
-                },
-                {
-                    q: 'Do you think we can still create anything new or original?',
-                    type: 'option',
-                    options: ['Yes', 'No', 'Not sure']
-                },
-                {
-                    q: 'How do you differentiate between creativity and imagination?',
-                    type: 'free',
-                    options: null
-                },
-                {
-                    q: 'How do you define imagination?',
-                    type: '3max',
-                    options: null
-                },
-                {
-                    q: 'What part of the creative process do you find most challenging?',
-                    type: 'free',
-                    options: null
-                }
-            ],
+            {
+                q: "How do you define creativity?",
+                type: "3max",
+                options: null,
+                sID: 1,
+                qID: 1,
+            },
+            {
+                q: "Do you think we can still create anything new or original?",
+                type: "option",
+                options: ["Yes", "No", "Not sure"],
+                sID: 1,
+                qID: 2,
+            },
+            {
+                q:
+                    "How do you differentiate between creativity and imagination?",
+                type: "free",
+                options: null,
+                sID: 1,
+                qID: 3,
+            },
+            {
+                q: "How do you define imagination?",
+                type: "3max",
+                options: null,
+                sID: 1,
+                qID: 4,
+            },
+            {
+                q:
+                    "What part of the creative process do you find most challenging?",
+                type: "free",
+                options: null,
+                sID: 1,
+                qID: 5,
+            },
+        ],
         2: [
-                {
-                    q: 'Can AI be creative?',
-                    type:'option',
-                    options: ['Yes', 'No', 'Not sure']
-                },
-                {
-                    q: 'Can AI be as creative as humans?',
-                    type: 'free',
-                    options: null
-                },
-                {
-                    q: 'Do you think AI can have imagination?',
-                    type: 'option',
-                    options: ['Yes', 'No', 'Not sure']
-                },
-                {
-                    q: 'Do you think AI should be used in the creative sphere?',
-                    type: 'option',
-                    options: ['Yes', 'No', 'Not sure']
-                },
-                {
-                    q: 'How do you feel about AI being used in the creative sphere?',
-                    type: 'option',
-                    options: ['😍', '🤔', '😡']
-                },
-                {
-                    q: 'Do you think AI can benefit human creativity?',
-                    type: 'free',
-                    options: 'null'
-                }
-            ],
+            {
+                q: "Can AI be creative?",
+                type: "option",
+                options: ["Yes", "No", "Not sure"],
+                sID: 2,
+                qID: 1,
+            },
+            {
+                q: "Can AI be as creative as humans?",
+                type: "free",
+                options: null,
+                sID: 2,
+                qID: 2,
+            },
+            {
+                q: "Do you think AI can have imagination?",
+                type: "option",
+                options: ["Yes", "No", "Not sure"],
+                sID: 2,
+                qID: 3,
+            },
+            {
+                q: "Do you think AI should be used in the creative sphere?",
+                type: "option",
+                options: ["Yes", "No", "Not sure"],
+                sID: 2,
+                qID: 4,
+            },
+            {
+                q:
+                    "How do you feel about AI being used in the creative sphere?",
+                type: "option",
+                options: ["😍", "🤔", "😡"],
+                sID: 2,
+                qID: 5,
+            },
+            {
+                q: "Do you think AI can benefit human creativity?",
+                type: "free",
+                options: "null",
+                sID: 2,
+                qID: 6,
+            },
+        ],
         3: [
             {
-                q: 'Have you ever (intentionally) worked with AI?',
-                type: 'option',
-                options: ['Yes', 'No', 'Not sure']
+                q: "Have you ever (intentionally) worked with AI?",
+                type: "option",
+                options: ["Yes", "No", "Not sure"],
+                sID: 3,
+                qID: 1,
             },
             {
-                q:'Why have / haven’t you?',
-                type: 'free',
-                options: null
+                q: "Why have / haven’t you?",
+                type: "free",
+                options: null,
+                sID: 3,
+                qID: 2,
             },
             {
-                q: 'Would you want to work with AI creatively?',
-                type: 'option',
-                options: ['😍', '🤔', '😡']
+                q: "Would you want to work with AI creatively?",
+                type: "option",
+                options: ["😍", "🤔", "😡"],
+                sID: 3,
+                qID: 3,
             },
             {
-                q: 'Would you know how to use AI in your creative process?',
-                type: 'option',
-                options: ['Yes', 'No', 'Not sure']
+                q: "Would you know how to use AI in your creative process?",
+                type: "option",
+                options: ["Yes", "No", "Not sure"],
+                sID: 3,
+                qID: 4,
             },
             {
-                q: 'What appeals / doesn’t appeal to you about working with AI?',
-                type: 'free',
-                options: null
+                q:
+                    "What appeals / doesn’t appeal to you about working with AI?",
+                type: "free",
+                options: null,
+                sID: 3,
+                qID: 5,
             },
             {
-                q: 'Have you seen much AI generated/aided work?',
-                type: 'free',
-                options: null
+                q: "Have you seen much AI generated/aided work?",
+                type: "free",
+                options: null,
+                sID: 3,
+                qID: 6,
             },
             {
-                q: 'How do you feel about AI generated/aided work?',
-                type: 'option',
-                options: ['😍', '🤔', '😡']
-            }
+                q: "How do you feel about AI generated/aided work?",
+                type: "option",
+                options: ["😍", "🤔", "😡"],
+                sID: 3,
+                qID: 7,
+            },
         ]
-    }
+    };
 
     // functions
     function responseReceived(sentiment) {
@@ -170,7 +210,7 @@
             }, 4000);
         };
 
-    }
+    };
 
     function sendMessage(message) {
         console.log('sending this message', message)
@@ -182,6 +222,11 @@
         if (paused) return;
         if (e.type === 'keydown' && e.keyCode !== 13) return;
         let question, message;
+        const { sID, qID  } = conversations[whichConvo][convoPos];
+        let ids = {
+            sID,
+            qID
+        };
         if (currentResponseType === 'free' || currentResponseType === '3max') {
             if (!ta.value || !ta.value.length || /^\s+$/.test(ta.value)) return;
             question = response.innerText
@@ -203,7 +248,7 @@
                 .trim();
         };
             thinkingInt = setInterval(thinking, 250);
-            sendMessage({question, message});
+            sendMessage({ids, question, message});
             setTimeout(() => {
                 if (currentResponseType === 'free' || currentResponseType === '3max') {
                     ta.placeholder = '';
@@ -295,9 +340,16 @@
         const { sentiment } = data;
         responseReceived(sentiment);
         paused = false;
-    })
+    });
+
+    // question stat response
+    socket.on('q_response', data => {
+        console.log('q_response', data);
+    });
 
     socket.emit('hello');
+    // how to fetch question stats
+    socket.emit('fetch_question_stats', {ids: {sID: 1, qID: 1}});
 
     // other
     let whichGif = rando(2, 1);
