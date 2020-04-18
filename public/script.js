@@ -215,6 +215,7 @@
     };
 
     function sendMessage(message) {
+        stats.style.display = 'none';
         console.log('sending this message', message)
         paused = true;
         socket.emit('send_message', message);
@@ -255,15 +256,15 @@
                 message = 'ok';
             };
         };
-            thinkingInt = setInterval(thinking, 250);
-            sendMessage({ids, question, message});
-            setTimeout(() => {
-                if (currentResponseType === 'free' || currentResponseType === '3max') {
-                    ta.placeholder = '';
-                    ta.value = '';
-                    ta.style.height = '20px';
-                };
-            }, 30);
+        thinkingInt = setInterval(thinking, 250);
+        sendMessage({ids, question, message});
+        setTimeout(() => {
+            if (currentResponseType === 'free' || currentResponseType === '3max') {
+                ta.placeholder = '';
+                ta.value = '';
+                ta.style.height = '20px';
+            };
+        }, 30);
     };
 
     function thinking() {
@@ -355,12 +356,10 @@
             neutral: (data.data.neutral_label_count / data.data.times_answered * 100).toFixed(1),
             negative: (data.data.negative_label_count / data.data.times_answered * 100).toFixed(1)
         };
-        console.log(`${percentageStats.positive}%`);
-        console.log(`${percentageStats.neutral}%`);
-        console.log(`${percentageStats.negative}%`);
         stats.innerText = `+${percentageStats.positive}%
                             ~${percentageStats.neutral}%
                             -${percentageStats.negative}%`
+        stats.style.display = 'flex';
     });
 
     socket.emit('hello');
@@ -371,6 +370,8 @@
     runway.src = `/assets/runway${whichGif}.gif`;
     background.style.background = `url(/assets/runway${whichGif}.gif) no-repeat center center fixed`;
     background.style.backgroundSize = `cover`;
-
+    setTimeout(() => {
+        infoWrapper.style.opacity = '1';
+    }, 600)
 
 })();
