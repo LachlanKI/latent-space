@@ -33,6 +33,11 @@ body {
     align-items: center;
 }
 
+#boxWrap {
+    height: 100px;
+    width: 100px;
+}
+
 #background {
     position: absolute;
     z-index: -2;
@@ -295,7 +300,7 @@ textarea {
     margin: 50px auto 0 auto;
     display: flex;
     align-items: flex-end;
-    width: 50px;
+    /* width: 50px; */
     height: 13%;
     padding-bottom: 30px;
     /* background-color: lime; */
