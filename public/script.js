@@ -105,7 +105,7 @@
                 q:
                     "How do you feel about AI being used in the creative sphere?",
                 type: "option",
-                options: ["😍", "🤔", "😡"],
+                options: ["😍", "😡", "🤔"],
                 sID: 2,
                 qID: 5,
             },
@@ -135,7 +135,7 @@
             {
                 q: "Would you want to work with AI creatively?",
                 type: "option",
-                options: ["😍", "🤔", "😡"],
+                options: ["😍", "😡", "🤔"],
                 sID: 3,
                 qID: 3,
             },
@@ -164,7 +164,7 @@
             {
                 q: "How do you feel about AI generated/aided work?",
                 type: "option",
-                options: ["😍", "🤔", "😡"],
+                options: ["😍", "😡", "🤔"],
                 sID: 3,
                 qID: 7,
             },
@@ -242,10 +242,16 @@
                 .replace(/\s+/g, " ")
                 .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
                 .trim();
-            message = e.target.innerText
-                .replace(/\s+/g, " ")
-                .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-                .trim();
+            if (e.target.innerText === 'YES' || e.target.innerText === '😍') {
+                console.log('amazing');
+                message = 'amazing';
+            } else if (e.target.innerText === 'NO' || e.target.innerText === '😡') {
+                console.log('hate');
+                message = 'hate';
+            } else if (e.target.innerText === 'NOT SURE' || e.target.innerText === '🤔') {
+                console.log('ok');
+                message = 'ok';
+            };
         };
             thinkingInt = setInterval(thinking, 250);
             sendMessage({ids, question, message});
@@ -356,13 +362,13 @@
     runway.src = `/assets/runway${whichGif}.gif`;
     background.style.background = `url(/assets/runway${whichGif}.gif) no-repeat center center fixed`;
     background.style.backgroundSize = `cover`;
-    if (window.innerWidth > 500) {
-        send.style.right = `47px`;
-    } else if (window.innerWidth <= 380) {
-        send.style.right = `${(window.innerWidth * 0.025) - 3}px`;
-    } else {
-        send.style.right = `${(window.innerWidth * 0.1) - 3}px`;
-    };
+    // if (window.innerWidth > 500) {
+    //     send.style.right = `47px`;
+    // } else if (window.innerWidth <= 380) {
+    //     send.style.right = `${(window.innerWidth * 0.025) - 3}px`;
+    // } else {
+    //     send.style.right = `${(window.innerWidth * 0.1) - 3}px`;
+    // };
 
 
 })();
