@@ -24,7 +24,7 @@
     let enterButton = document.getElementById("enter-button");
     let infoWrapper = document.getElementById("info-wrapper");
     let contentWrapper = document.getElementById("content-wrapper");
-    let inpiutWrap = document.getElementById("inpiutWrap");
+    let inputWrap = document.getElementById("inputWrap");
     let optionsWrap = document.getElementById("optionsWrap");
     let optionsButtons = document.getElementsByClassName('options');
     let currentResponseType = null;
@@ -304,12 +304,12 @@
             };
             optionsWrap.style.display = 'flex';
             ta.style.display = 'none';
-            inputWrap.style.border = 'none';
+            // inputWrap.style.border = 'none';
             send.style.display = 'none';
         } else {
             optionsWrap.style.display = 'none';
             ta.style.display = 'block';
-            inputWrap.style.border = '3px solid white';
+            // inputWrap.style.border = '3px solid white';
             send.style.display = 'flex';
         };
     };
@@ -358,6 +358,8 @@
     background.style.backgroundSize = `cover`;
     if (window.innerWidth > 500) {
         send.style.right = `47px`;
+    } else if (window.innerWidth <= 380) {
+        send.style.right = `${(window.innerWidth * 0.025) - 3}px`;
     } else {
         send.style.right = `${(window.innerWidth * 0.1) - 3}px`;
     };

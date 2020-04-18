@@ -65,7 +65,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    width: 500px;
     /* height: 100vh; */
     perspective: 1500px;
     /* background-color: red; */
@@ -202,7 +202,7 @@ body {
     height: 130px;
     margin: -3px auto 30px auto;
     /* min-height: 120px; */
-    /* border: 3px solid white; */
+    border: 3px solid white;
     border-top: none;
     overflow: auto;
 }
@@ -223,7 +223,7 @@ textarea {
 #optionsWrap {
     display: none;
     /* flex-direction: column; */
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
     width: calc(6px + 100%);
     /* width: 100%; */
@@ -290,9 +290,9 @@ textarea {
 
 @media screen and (min-width: 500px) {
 
-    #info-wrapper, #content-wrapper {
+    /* #info-wrapper, #content-wrapper {
         width: 500px;
-    }
+    } */
 
 }
 
@@ -300,6 +300,15 @@ textarea {
 
    #info-wrapper, #content-wrapper {
         width: 380px;
+        /* background-color: lime; */
+    }
+
+    #responseWrap, #inputWrap, #runwayConatiner div {
+        width: 90%;
+    }
+
+    #response, textarea, .options {
+        font-size: 16px;
     }
 
 }
