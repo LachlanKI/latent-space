@@ -21,6 +21,7 @@
         negative: 0
     }
     let sentimentOverall = null;
+    let stats = document.getElementById("stats");
     let enterButton = document.getElementById("enter-button");
     let infoWrapper = document.getElementById("info-wrapper");
     let contentWrapper = document.getElementById("content-wrapper");
@@ -173,6 +174,7 @@
 
     // functions
     function responseReceived(sentiment) {
+        fetchStats(conversations[whichConvo][convoPos].sID, conversations[whichConvo][convoPos].qID);
         if (sentiment.sentimentLabel === 'POSITIVE') {
             sentimentObj.positive++;
             background.style.filter = `hue-rotate(200deg)`;
@@ -264,12 +266,6 @@
             }, 30);
     };
 
-    function moveSend() {
-        if (window.innerWidth < 500) {
-            send.style.right = `${(window.innerWidth * 0.1) - 3}px`;
-        };
-    };
-
     function thinking() {
         response.innerText = thinkingArr[thinkingCount];
         thinkingCount += 1;
@@ -310,21 +306,24 @@
             };
             optionsWrap.style.display = 'flex';
             ta.style.display = 'none';
-            // inputWrap.style.border = 'none';
-            send.style.display = 'none';
+            send.style.opacity = '0';
+            send.style.pointerEvents = 'none';
         } else {
             optionsWrap.style.display = 'none';
             ta.style.display = 'block';
-            // inputWrap.style.border = '3px solid white';
-            send.style.display = 'flex';
+            send.style.opacity = '1';
+            send.style.pointerEvents = 'auto';
         };
+    };
+
+    function fetchStats(x, y) {
+        socket.emit('fetch_question_stats', {ids: {sID: x, qID: y}});
     };
 
     // event_listeners
     document.addEventListener('keydown', (e) => inputEvent(e));
     send.addEventListener('touchstart', (e) => inputEvent(e));
     send.addEventListener('click', (e) => inputEvent(e));
-    window.addEventListener('resize', moveSend);
     enterButton.addEventListener('click', () => enterEvent(true));
     logo.addEventListener('click', () => enterEvent(false));
     for (var i = 0; i < optionsButtons.length; i++) {
@@ -351,24 +350,27 @@
     // question stat response
     socket.on('q_response', data => {
         console.log('q_response', data);
+        var percentageStats = {
+            positive: (data.data.positive_label_count / data.data.times_answered * 100).toFixed(1),
+            neutral: (data.data.neutral_label_count / data.data.times_answered * 100).toFixed(1),
+            negative: (data.data.negative_label_count / data.data.times_answered * 100).toFixed(1)
+        };
+        console.log(`${percentageStats.positive}%`);
+        console.log(`${percentageStats.neutral}%`);
+        console.log(`${percentageStats.negative}%`);
+        stats.innerText = `+${percentageStats.positive}%
+                            ~${percentageStats.neutral}%
+                            -${percentageStats.negative}%`
     });
 
     socket.emit('hello');
     // how to fetch question stats
-    socket.emit('fetch_question_stats', {ids: {sID: 1, qID: 1}});
 
     // other
     let whichGif = rando(2, 1);
     runway.src = `/assets/runway${whichGif}.gif`;
     background.style.background = `url(/assets/runway${whichGif}.gif) no-repeat center center fixed`;
     background.style.backgroundSize = `cover`;
-    // if (window.innerWidth > 500) {
-    //     send.style.right = `47px`;
-    // } else if (window.innerWidth <= 380) {
-    //     send.style.right = `${(window.innerWidth * 0.025) - 3}px`;
-    // } else {
-    //     send.style.right = `${(window.innerWidth * 0.1) - 3}px`;
-    // };
 
 
 })();
