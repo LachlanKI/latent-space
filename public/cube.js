@@ -2,7 +2,10 @@ var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 30, window.innerWidth/window.innerHeight, 0.1, 1000 );
 
 var renderer = new THREE.WebGLRenderer( { alpha: true } );
-renderer.setPixelRatio(window.devicePixelRatio);
+
+setTimeout(() => renderer.setPixelRatio(window.devicePixelRatio), 2000);
+
+// renderer.setPixelRatio(window.devicePixelRatio);
 let boxWrap = document.getElementById('boxWrap');
 
 boxWrap.appendChild( renderer.domElement );
