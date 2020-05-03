@@ -333,9 +333,9 @@
 
     // socket
     // TODO: the socket will need to be changed when it is running of heroku
-    // var socket = io.connect("http://localhost:8080");
+    var socket = io.connect("http://localhost:8080");
     // var socket = io.connect("http://192.168.0.73:8080");
-    var socket = io.connect("https://latentspace.herokuapp.com/");
+    // var socket = io.connect("https://latentspace.herokuapp.com/");
 
     socket.on('hi_there', data => {
         const { message } = data;
@@ -362,8 +362,13 @@
         stats.style.display = 'flex';
     });
 
+    socket.on('global_response', data => {
+        console.log('global_response', data);
+    })
+
     socket.emit('hello');
-    // how to fetch question stats
+    // how to fetch global data
+    socket.emit('fetch_global_values');
 
     // other
     let whichGif = rando(2, 1);

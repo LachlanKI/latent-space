@@ -169,6 +169,91 @@ async function ddbUpdateQ(ids, sentiment, currentQuestion) {
     };
 };
 
+async function fetchGlobalValues() {
+    let params = {
+        TableName: process.env.TABLE_NAME_GLOBAL,
+        Key: {
+            id: 'global_values'
+        },
+        ProjectionExpression: '#nqa, #plc, #nglc, #ntlc, #mlc, #pts, #ngts, #ntts, #mts',
+        ExpressionAttributeNames: {
+            '#nqa': 'no_questions_answered',
+            '#plc': 'positive_label_count',
+            '#nglc': 'negative_label_count',
+            '#ntlc': 'neutral_label_count',
+            '#mlc': 'mixed_label_count',
+            '#pts': 'positive_total_score',
+            '#ngts': 'negative_total_score',
+            '#ntts': 'neutral_total_score',
+            '#mts': 'mixed_total_score',
+        }
+    };
+
+    try {
+        currentGlobalStats = await docClient.get(params).promise();
+        return {
+            success: true,
+            data: currentGlobalStats.Item
+        };
+    } catch (err) {
+        console.log('something not good ~ globalls1', err);
+        return {success: false};
+    };
+};
+
+async function ddbUpdateGlobal(sentiment) {
+
+    let sentimentScoreMatch = null;
+    if (sentimentScoreRegex.test(sentiment.sentimentScore)) {
+        sentimentScoreMatch = sentiment.sentimentScore.match(sentimentScoreRegex);
+    };
+    if (!sentimentScoreMatch) {
+        return;
+    };
+
+    let fetchGlobalResult = await fetchGlobalValues();
+
+    if (!fetchGlobalResult.success) return;
+    
+    console.log('we go the current stats!', fetchGlobalResult.data);
+
+    let params = {
+        TableName: process.env.TABLE_NAME_GLOBAL,
+        Key: {
+            id: 'global_values'
+        },
+        UpdateExpression: `set #nqa = :nqa, #plc = :plc, #nglc = :nglc, #ntlc = :ntlc, #mlc = :mlc, #pts = :pts, #ngts = :ngts, #ntts = :ntts, #mts = :mts`,
+        ExpressionAttributeNames: {
+            '#nqa': 'no_questions_answered',
+            '#plc': 'positive_label_count',
+            '#nglc': 'negative_label_count',
+            '#ntlc': 'neutral_label_count',
+            '#mlc': 'mixed_label_count',
+            '#pts': 'positive_total_score',
+            '#ngts': 'negative_total_score',
+            '#ntts': 'neutral_total_score',
+            '#mts': 'mixed_total_score',
+        },
+        ExpressionAttributeValues: {
+            ':nqa': fetchGlobalResult.data.no_questions_answered + 1,
+            ':plc': /positive/i.test(sentiment.sentimentLabel) ? fetchGlobalResult.data.positive_label_count + 1 : fetchGlobalResult.data.positive_label_count,
+            ':nglc': /negative/i.test(sentiment.sentimentLabel) ? fetchGlobalResult.data.negative_label_count + 1 : fetchGlobalResult.data.negative_label_count,
+            ':ntlc': /neutral/i.test(sentiment.sentimentLabel) ? fetchGlobalResult.data.neutral_label_count + 1 : fetchGlobalResult.data.neutral_label_count,
+            ':mlc': /mixed/i.test(sentiment.sentimentLabel) ? fetchGlobalResult.data.mixed_label_count + 1 : fetchGlobalResult.data.mixed_label_count,
+            ':pts': fetchGlobalResult.data.positive_total_score + parseFloat(sentimentScoreMatch[1]),
+            ':ngts': fetchGlobalResult.data.negative_total_score + parseFloat(sentimentScoreMatch[2]),
+            ':ntts': fetchGlobalResult.data.neutral_total_score + parseFloat(sentimentScoreMatch[3]),
+            ':mts': fetchGlobalResult.data.mixed_total_score + parseFloat(sentimentScoreMatch[4])
+        }
+    };
+
+    try {
+        await docClient.update(params).promise();
+    } catch (err) {
+        console.log('something not good ~ globalls2', err);
+    };
+};
+
 function handleMessage(id, dataObj) {
     return new Promise((resolve, reject) => {
         var params = {
@@ -188,8 +273,9 @@ function handleMessage(id, dataObj) {
 
                 (async () => {
                     await ddbPutC(id, dataObj, data.sentimentResponse);
-                    await ddbPutQ(dataObj.ids, dataObj.question, data.sentimentResponse);
                     resolve({success: true, sentiment: data.sentimentResponse});
+                    ddbPutQ(dataObj.ids, dataObj.question, data.sentimentResponse);
+                    ddbUpdateGlobal(data.sentimentResponse);
                 })();
             
             };
@@ -243,5 +329,6 @@ function rando(min, max) {
 module.exports = {
     handleMessage,
     getQuestionStats,
+    fetchGlobalValues,
     rando
 };

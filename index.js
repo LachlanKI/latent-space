@@ -10,7 +10,7 @@ const io = require("socket.io")(server);
 const { v4 } = require('uuid');
 
 // functions
-const { handleMessage, getQuestionStats, rando } = require("./utils");
+const { handleMessage, getQuestionStats, fetchGlobalValues, rando } = require("./utils");
 
 // middleware
 app.use(express.static("./public"));
@@ -41,6 +41,14 @@ io.on("connection", function(socket) {
         (async () => {
             let result = await getQuestionStats(data.ids);
             socket.emit('q_response', result);
+        })();
+    });
+
+    socket.on('fetch_global_values', () => {
+        console.log('in fetchglobalvaluers');
+        (async () => {
+            let result = await fetchGlobalValues();
+            socket.emit('global_response', result);
         })();
     });
 
