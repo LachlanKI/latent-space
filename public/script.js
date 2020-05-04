@@ -30,7 +30,7 @@
     let optionsButtons = document.getElementsByClassName('options');
     let currentResponseType = null;
     let firstEnter = false;
-
+    let pastConvos = [];
     let whichConvo;
     let convoPos = 0;
     let conversations = {
@@ -200,13 +200,14 @@
         convoPos++;
         if (convoPos <= conversations[whichConvo].length - 1) {
             currentResponseType = conversations[whichConvo][convoPos].type;
-            responseSetup();
+            responseSetup(false);
             response.innerText = conversations[whichConvo][convoPos].q;
             setTimeout(() => {
                 response.style.display = 'block';
             }, 100);
         } else {
             contentWrapper.style.opacity = '0';
+            end.style.display = 'flex';
             setTimeout(() => {
                 end.style.opacity = '1';
             }, 4000);
@@ -279,6 +280,26 @@
         return Math.floor(Math.random() * (max - min + 1)) + min;
     };
 
+    function start() {
+        console.log('start');
+        whichConvo = rando(3, 1);
+        for (var i = 0; i < pastConvos.length; i++) {
+            if (whichConvo === pastConvos[i]) {
+                start();
+                return;
+            };
+        };
+        pastConvos.push(whichConvo);
+        console.log(pastConvos);
+        response.innerText = conversations[whichConvo][0].q;
+        currentResponseType = conversations[whichConvo][0].type;
+        responseSetup(true);
+        setTimeout(() => {
+            response.style.display = 'block';
+        }, 3500);
+        firstEnter = true;
+    };
+
     function enterEvent(direction) {
         infoWrapper.style.transform = direction ? 'rotateY(180deg) translateZ(1px)' : 'rotateY(0deg) translateZ(1px)';
         infoWrapper.style.zIndex = direction ? 0 : 1;
@@ -289,26 +310,21 @@
         contentWrapper.style.opacity = direction ? 1 : 0;
         contentWrapper.style.pointerEvents = direction ? 'auto' : 'none';
         if (!firstEnter) {
-            whichConvo = rando(3, 1);
-            response.innerText = conversations[whichConvo][0].q;
-            currentResponseType = conversations[whichConvo][0].type;
-            responseSetup();
-            setTimeout(() => {
-                response.style.display = 'block';
-            }, 3500);
-            firstEnter = true;
+            start();
         };
     };
 
-    function responseSetup() {
+    function responseSetup(first) {
         if (currentResponseType === 'option') {
             for (var i = 0; i < optionsButtons.length; i++) {
                 optionsButtons[i].innerText = conversations[whichConvo][convoPos].options[i];
             };
-            optionsWrap.style.display = 'flex';
             ta.style.display = 'none';
             send.style.opacity = '0';
             send.style.pointerEvents = 'none';
+            optionsWrap.style.display = 'flex';
+            var delay = first ? 3500 : 50;
+            setTimeout(() => optionsWrap.style.opacity = '1', delay);
         } else {
             optionsWrap.style.display = 'none';
             ta.style.display = 'block';
@@ -321,10 +337,25 @@
         socket.emit('fetch_question_stats', {ids: {sID: x, qID: y}});
     };
 
+    function restart() {
+        if (pastConvos.length === 3) {
+            console.log('you done all of them m8');
+        } else {
+            convoPos = 0;
+            contentWrapper.style.opacity = '1';
+            end.style.opacity = '0';
+            setTimeout(() => {
+                end.style.display = 'none';
+            }, 4000);
+            start();
+        };
+    };
+
     // event_listeners
     document.addEventListener('keydown', (e) => inputEvent(e));
     send.addEventListener('touchstart', (e) => inputEvent(e));
     send.addEventListener('click', (e) => inputEvent(e));
+    end.addEventListener('click', () => restart());
     enterButton.addEventListener('click', () => enterEvent(true));
     logo.addEventListener('click', () => enterEvent(false));
     for (var i = 0; i < optionsButtons.length; i++) {
