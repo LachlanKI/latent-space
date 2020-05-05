@@ -134,7 +134,7 @@ body {
 #logo {
     display: block;
     width: 150px;
-    margin: 0px auto 40px auto;
+    margin: 60px auto 40px auto;
     cursor: pointer;
 }
 
@@ -282,9 +282,9 @@ textarea {
     justify-content: center;
     align-items: center;
     width: 30px;
-    height: 30px;
+    height: 40px;
     border: 3px solid white;
-    font-size: 1.2em;
+    font-size: 18px;
     background-color: transparent;
     pointer-events: auto;
     outline: none;
@@ -301,12 +301,12 @@ textarea {
     align-items: flex-end;
     /* width: 50px; */
     height: 13%;
-    padding-bottom: 30px;
+    padding-bottom: 40px;
     /* background-color: lime; */
 }
 
 #square img {
-    width: 100%;
+    width: 50px;
 }
 
 @media screen and (min-width: 500px) {

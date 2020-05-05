@@ -401,9 +401,9 @@
             neutral: (data.data.neutral_label_count / data.data.times_answered * 100).toFixed(1),
             negative: (data.data.negative_label_count / data.data.times_answered * 100).toFixed(1)
         };
-        stats.innerText = `+${percentageStats.positive}%
-                            ~${percentageStats.neutral}%
-                            -${percentageStats.negative}%`
+        stats.innerText = `😍 ${percentageStats.positive}%
+                            😡 ${percentageStats.negative}%
+                            🤔 ${percentageStats.neutral}%`
         stats.style.display = 'flex';
     });
 
