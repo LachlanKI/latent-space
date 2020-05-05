@@ -33,6 +33,8 @@
     let pastConvos = [];
     let whichConvo;
     let convoPos = 0;
+    let countdownVal = 5;
+    let countdownInt;
     let conversations = {
         1: [
             {
@@ -209,6 +211,7 @@
             contentWrapper.style.opacity = '0';
             end.style.display = 'flex';
             setTimeout(() => {
+                ta.value = '';
                 end.style.opacity = '1';
             }, 4000);
         };
@@ -337,17 +340,28 @@
         socket.emit('fetch_question_stats', {ids: {sID: x, qID: y}});
     };
 
-    function restart() {
-        if (pastConvos.length === 3) {
-            console.log('you done all of them m8');
-        } else {
+    function countdown() {
+        end.innerText = countdownVal;
+        countdownVal--;
+        if (countdownVal === 0) {
             convoPos = 0;
             contentWrapper.style.opacity = '1';
             end.style.opacity = '0';
             setTimeout(() => {
                 end.style.display = 'none';
+                end.innerText = '😃';
+                countdownVal = 5;
             }, 4000);
             start();
+            clearInterval(countdownInt);
+        };
+    };
+
+    function restart() {
+        if (pastConvos.length === 3) {
+            console.log('you done all of them m8');
+        } else {
+            countdownInt = setInterval(countdown, 1000);
         };
     };
 
@@ -387,9 +401,9 @@
             neutral: (data.data.neutral_label_count / data.data.times_answered * 100).toFixed(1),
             negative: (data.data.negative_label_count / data.data.times_answered * 100).toFixed(1)
         };
-        stats.innerText = `+${percentageStats.positive}%
-                            ~${percentageStats.neutral}%
-                            -${percentageStats.negative}%`
+        stats.innerText = `😍 ${percentageStats.positive}%
+                            😡 ${percentageStats.negative}%
+                            🤔 ${percentageStats.neutral}%`
         stats.style.display = 'flex';
     });
 
