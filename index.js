@@ -4,6 +4,7 @@ require('dotenv').config();
 // vars
 const express = require("express");
 const app = express();
+const basicAuth = require('basic-auth');
 const bodyParser = require("body-parser");
 const server = require("http").Server(app);
 const io = require("socket.io")(server);
@@ -11,6 +12,17 @@ const { v4 } = require('uuid');
 
 // functions
 const { handleMessage, getQuestionStats, fetchGlobalValues, rando } = require("./utils");
+const { dataDumper } = require("./dataDumper");
+
+const auth = function(req, res, next) {
+    const creds = basicAuth(req);
+    if (!creds || creds.name != 'k3s' || creds.pass != 'h4ckth3pl4n3t') {
+        res.setHeader('WWW-Authenticate', 'Basic realm=www');
+        res.sendStatus(401);
+    } else {
+        next();
+    };
+};
 
 // middleware
 app.use(express.static("./public"));
@@ -55,6 +67,20 @@ io.on("connection", function(socket) {
 });
 
 app.get("/", (req, res) => res.sendFile(__dirname + "/index.html"));
+
+app.get("/data", [auth], (req, res) => {
+    res.sendFile(__dirname + '/data.html'); 
+});
+
+app.get('/data-global-stats', [auth], (req, res) => {
+    fetchGlobalValues().then(result => {
+        if (result.success) {
+            res.json({success: true, result});
+        } else { 
+            res.json({success: false});
+        };
+    });
+});
 
 app.all("*", (req, res) => res.redirect("/"));
 
