@@ -341,7 +341,8 @@
     };
 
     function countdown() {
-        end.innerText = countdownVal;
+        end.children[0].style.border = 'none';
+        end.children[0].innerText = countdownVal;
         countdownVal--;
         if (countdownVal === 0) {
             convoPos = 0;
@@ -349,7 +350,8 @@
             end.style.opacity = '0';
             setTimeout(() => {
                 end.style.display = 'none';
-                end.innerText = '😃';
+                end.children[0].innerText = 'new conversation?';
+                end.children[0].style.border = 'border: 3px solid white';
                 countdownVal = 5;
             }, 4000);
             start();
@@ -369,7 +371,7 @@
     document.addEventListener('keydown', (e) => inputEvent(e));
     send.addEventListener('touchstart', (e) => inputEvent(e));
     send.addEventListener('click', (e) => inputEvent(e));
-    end.addEventListener('click', () => restart());
+    end.children[0].addEventListener('click', () => restart());
     enterButton.addEventListener('click', () => enterEvent(true));
     logo.addEventListener('click', () => enterEvent(false));
     for (var i = 0; i < optionsButtons.length; i++) {
