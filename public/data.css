@@ -22,7 +22,7 @@ h4:first-of-type {
 h4 {
     font-weight: normal;
     font-size: 1em;
-    color: lime;
+    color: white;
     margin-left: 20px;
 }
 
@@ -35,4 +35,16 @@ p {
 
 span {
     color: fuchsia;
+}
+
+.alternate {
+    color: lime;
+}
+
+.spanX {
+    color: magenta;
+}
+
+.spanY {
+    color: rgb(255, 30, 200);
 }

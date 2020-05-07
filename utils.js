@@ -326,9 +326,73 @@ function rando(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
+async function getAllQuestionStatistics() {
+    return new Promise((resolve, reject) => {
+        let data = [];
+        function recursion(lastEvaluatedKey) {
+            let params = {
+                TableName: process.env.TABLE_NAME_Q,
+                ExclusiveStartKey: lastEvaluatedKey ? lastEvaluatedKey : null,
+                Limit: 50
+            };
+            try {
+                docClient.scan(params).promise().then(result => {
+                    data = [...data, ...result.Items];
+                    if (result.LastEvaluatedKey) {
+                        recursion(result.LastEvaluatedKey)
+                    } else {
+                        resolve({
+                            success: true,
+                            data
+                        });
+                    };
+                });
+            } catch (error) {
+                resolve({
+                    success: false
+                });
+            };
+        };
+        recursion();
+    });
+};
+
+function getAllConversations() {
+    return new Promise((resolve, reject) => {
+        let data = [];
+        function recursion(lastEvaluatedKey) {
+            let params = {
+                TableName: process.env.TABLE_NAME_C,
+                ExclusiveStartKey: lastEvaluatedKey ? lastEvaluatedKey : null,
+                Limit: 50
+            };
+            try {
+                docClient.scan(params).promise().then(result => {
+                    data = [...data, ...result.Items];
+                    if (result.LastEvaluatedKey) {
+                        recursion(result.LastEvaluatedKey)
+                    } else {
+                        resolve({
+                            success: true,
+                            data
+                        });
+                    };
+                });
+            } catch (error) {
+                resolve({
+                    success: false
+                });
+            };
+        };
+        recursion();
+    });
+};
+
 module.exports = {
     handleMessage,
     getQuestionStats,
     fetchGlobalValues,
-    rando
+    rando,
+    getAllQuestionStatistics,
+    getAllConversations
 };

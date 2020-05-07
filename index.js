@@ -11,8 +11,7 @@ const io = require("socket.io")(server);
 const { v4 } = require('uuid');
 
 // functions
-const { handleMessage, getQuestionStats, fetchGlobalValues, rando } = require("./utils");
-const { dataDumper } = require("./dataDumper");
+const { handleMessage, getQuestionStats, fetchGlobalValues, getAllQuestionStatistics, getAllConversations, rando } = require("./utils");
 
 const auth = function(req, res, next) {
     const creds = basicAuth(req);
@@ -77,6 +76,26 @@ app.get('/data-global-stats', [auth], (req, res) => {
         if (result.success) {
             res.json({success: true, result});
         } else { 
+            res.json({success: false});
+        };
+    });
+});
+
+app.get('/data-questions', [auth], (req, res) => {
+    getAllQuestionStatistics().then(result => {
+        if (result.success) {
+            res.json({success: true, result});
+        } else {
+            res.json({success: false});
+        };
+    });
+});
+
+app.get('/data-conversations', [auth], (req, res) => {
+    getAllConversations().then(result => {
+        if (result.success) {
+            res.json({success: true, result});
+        } else {
             res.json({success: false});
         };
     });
