@@ -131,9 +131,26 @@ axios.get('/data-conversations').then(result => {
             let convoAlternate = false;
             conversationsElement.appendChild(returnBreak(true, alternate));
             for (const questionResponse of conversation.arrayOfQA) {
+                let leetResponse = false;
+                if (/1337x/.test(questionResponse.message)) {
+                    if (/amazing/.test(questionResponse.message)) {
+                        leetResponse = 'YES'
+                    } else if (/happy/.test(questionResponse.message)) {
+                        leetResponse = '😍'
+                    } else if (/hate/.test(questionResponse.message)) {
+                        leetResponse = 'NO'
+                    } else if (/negative/.test(questionResponse.message)) {
+                        leetResponse = '😡'
+                    } else if (/ok/.test(questionResponse.message)) {
+                        leetResponse = 'NOT SURE'
+                    } else if (/sure/.test(questionResponse.message)) {
+                        leetResponse = '🤔'  
+                    };
+                };
+                console.log(leetResponse);
                 conversationsElement.appendChild(returnStatElement('question id', `${questionResponse.ids.sID}_${questionResponse.ids.qID}`, alternate, true, convoAlternate));
                 conversationsElement.appendChild(returnStatElement('question', questionResponse.question.replace(/\\/g, '').toLowerCase(), alternate, true, convoAlternate));
-                conversationsElement.appendChild(returnStatElement('response', questionResponse.message, alternate, true, convoAlternate));
+                conversationsElement.appendChild(returnStatElement('response', leetResponse ? leetResponse : questionResponse.message, alternate, true, convoAlternate));
                 conversationsElement.appendChild(returnStatElement('overall sentiment', questionResponse.sentiment.sentimentLabel.toLowerCase(), alternate, true, convoAlternate));
                 let sentimentMatch = questionResponse.sentiment.sentimentScore.match(sentimentScoreRegex);
                 conversationsElement.appendChild(returnStatElement('sentiment scores', `positive: ${sentimentMatch[1]}, neutral: ${sentimentMatch[3]}, negative: ${sentimentMatch[2]}`, alternate, true, convoAlternate));

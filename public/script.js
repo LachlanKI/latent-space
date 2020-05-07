@@ -250,14 +250,23 @@
                 .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
                 .trim();
             if (e.target.innerText === 'YES' || e.target.innerText === '😍') {
-                console.log('amazing');
-                message = 'amazing';
+                if (e.target.innerText === 'YES') {
+                    message = 'amazing 1337x';
+                } else {
+                    message = 'happy 1337x';
+                };
             } else if (e.target.innerText === 'NO' || e.target.innerText === '😡') {
-                console.log('hate');
-                message = 'hate';
+                if (e.target.innerText === 'NO') {
+                    message = 'hate 1337x';
+                } else {
+                    message = 'negative 1337x';
+                };
             } else if (e.target.innerText === 'NOT SURE' || e.target.innerText === '🤔') {
-                console.log('ok');
-                message = 'ok';
+                if (e.target.innerText === 'NOT SURE') {
+                    message = 'ok 1337x';
+                } else {
+                    message = 'sure 1337x';
+                };
             };
         };
         thinkingInt = setInterval(thinking, 250);
