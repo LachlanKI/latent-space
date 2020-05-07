@@ -118,7 +118,6 @@ axios.get('/data-conversations').then(result => {
     if (!success) {
         conversationsLoaded = 'request failed';
     } else {
-        console.log(data);
         conversationsLoaded = '＼(≧▽≦)／';
         let conversationsElement = document.getElementById('conversations');
         let sorted = data.sort((a, b) => b.created_at - a.created_at);
@@ -147,7 +146,6 @@ axios.get('/data-conversations').then(result => {
                         leetResponse = '🤔'  
                     };
                 };
-                console.log(leetResponse);
                 conversationsElement.appendChild(returnStatElement('question id', `${questionResponse.ids.sID}_${questionResponse.ids.qID}`, alternate, true, convoAlternate));
                 conversationsElement.appendChild(returnStatElement('question', questionResponse.question.replace(/\\/g, '').toLowerCase(), alternate, true, convoAlternate));
                 conversationsElement.appendChild(returnStatElement('response', leetResponse ? leetResponse : questionResponse.message.replace(/\\/g, ''), alternate, true, convoAlternate));
