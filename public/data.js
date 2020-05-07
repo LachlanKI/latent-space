@@ -150,7 +150,7 @@ axios.get('/data-conversations').then(result => {
                 console.log(leetResponse);
                 conversationsElement.appendChild(returnStatElement('question id', `${questionResponse.ids.sID}_${questionResponse.ids.qID}`, alternate, true, convoAlternate));
                 conversationsElement.appendChild(returnStatElement('question', questionResponse.question.replace(/\\/g, '').toLowerCase(), alternate, true, convoAlternate));
-                conversationsElement.appendChild(returnStatElement('response', leetResponse ? leetResponse : questionResponse.message, alternate, true, convoAlternate));
+                conversationsElement.appendChild(returnStatElement('response', leetResponse ? leetResponse : questionResponse.message.replace(/\\/g, ''), alternate, true, convoAlternate));
                 conversationsElement.appendChild(returnStatElement('overall sentiment', questionResponse.sentiment.sentimentLabel.toLowerCase(), alternate, true, convoAlternate));
                 let sentimentMatch = questionResponse.sentiment.sentimentScore.match(sentimentScoreRegex);
                 conversationsElement.appendChild(returnStatElement('sentiment scores', `positive: ${sentimentMatch[1]}, neutral: ${sentimentMatch[3]}, negative: ${sentimentMatch[2]}`, alternate, true, convoAlternate));
