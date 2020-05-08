@@ -46,7 +46,7 @@ body {
     min-height: 750px;
     transition: filter 0.5s linear;
     overflow: hidden;
-    background: url(/assets/runway1.gif) no-repeat fixed center center;
+    /* background: url(/assets/runway1.gif) no-repeat fixed center center; */
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -62,13 +62,20 @@ body {
     width: 100%;
     height: 100%;
     opacity: 0;
-    font-size: 20px;
     transition: opacity 1s;
 }
 
 #end button {
     border: 3px solid white;
     padding: 3px 5px;
+    font-size: 20px;
+    background-color: transparent;
+    outline: none;
+    cursor: pointer;
+}
+
+#end button:active {
+    background-color: black;
 }
 
 #perspective {
@@ -150,7 +157,7 @@ body {
     height: 15%;
 }
 
-#runwayConatiner div {
+#runwayInner {
     /* display: flex;
     align-items: center; */
     position: relative;
@@ -168,6 +175,14 @@ body {
     top: -50%;
     filter: hue-rotate(0deg);
     transition: filter 0.5s linear;
+}
+
+.jsgif, .jsgif canvas {
+    width: 100%;
+}
+
+.jsgif_toolbar {
+    display: none;
 }
 
 #stats {
