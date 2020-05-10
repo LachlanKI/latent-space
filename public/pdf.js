@@ -3,18 +3,9 @@ let end = document.getElementById('end');
 let runway = document.getElementById('runway');
 
 // event listeners
-end.children[1].addEventListener('click', () => download());
 
 // make runway a super gif
-var rub = new SuperGif({ gif: runway } );
-console.log(rub);
-rub.load(() => {
-    console.log('loaded bb');
-    let gifCanvXXX = document.getElementsByClassName('jsgif')[0];
-    gifCanvXXX.children[0].style.opacity = '1';
-    // runway.style.opacity = '1';
-    // var frame = rub.get_current_frame();
-});
+
 
 // convert current frame to data uri
 function toDataURL(url, callback) {
