@@ -55,6 +55,7 @@ body {
 
 #end {
     display: none;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     position: absolute;
@@ -72,6 +73,7 @@ body {
     background-color: transparent;
     outline: none;
     cursor: pointer;
+    margin: 10px;
 }
 
 #end button:active {

@@ -23,6 +23,8 @@
         negative: 0
     };
     let sentimentOverall = null;
+    let superGifLoaded = false;
+    let contributors;
     let stats = document.getElementById("stats");
     let enterButton = document.getElementById("enter-button");
     let infoWrapper = document.getElementById("info-wrapper");
@@ -215,6 +217,7 @@
                 end.children[0].innerText = '😃';
                 end.children[0].style.border = 'none';
                 end.children[0].style.fontSize = '60px';
+                end.children[0].style.pointerEvents = 'none';
             };
             contentWrapper.style.opacity = '0';
             end.style.display = 'flex';
@@ -316,8 +319,7 @@
         responseSetup(true);
         setTimeout(() => {
             response.style.display = 'block';
-        }, 3500);
-        firstEnter = true;
+        }, 1500);
     };
 
     function enterEvent(direction) {
@@ -330,6 +332,9 @@
         contentWrapper.style.opacity = direction ? 1 : 0;
         contentWrapper.style.pointerEvents = direction ? 'auto' : 'none';
         if (!firstEnter) {
+            firstEnter = true;
+        };
+        if (superGifLoaded) {
             start();
         };
     };
@@ -343,7 +348,7 @@
             send.style.opacity = '0';
             send.style.pointerEvents = 'none';
             optionsWrap.style.display = 'flex';
-            var delay = first ? 3500 : 50;
+            var delay = first ? 1500 : 50;
             setTimeout(() => optionsWrap.style.opacity = '1', delay);
         } else {
             optionsWrap.style.display = 'none';
@@ -362,6 +367,8 @@
         end.children[0].style.fontSize = '60px';
         end.children[0].style.pointerEvents = 'none';
         end.children[0].innerText = countdownVal;
+        end.children[1].style.opacity = '0';
+        end.children[1].style.pointerEvents = 'none';
         countdownVal--;
         if (countdownVal === 0) {
             convoPos = 0;
@@ -373,6 +380,8 @@
                 end.children[0].style.border = '3px solid white';
                 end.children[0].style.fontSize = '20px';
                 end.children[0].style.pointerEvents = 'auto';
+                end.children[1].style.opacity = '1';
+                end.children[1].style.pointerEvents = 'auto';
                 countdownVal = 5;
             }, 4000);
             start();
@@ -407,9 +416,9 @@
     var smile, logoUri;
     function download() {
 
-        toDataURL(`/assets/gifimgs/${whichGif}/runway15.jpeg`, function(dataUrl) {
+        var frame = rub.get_current_frame();
+        toDataURL(`/assets/gifimgs/${whichGif}/runway${frame}.jpeg`, function(dataUrl) {
             var imgData = dataUrl;
-            var frame = rub.get_current_frame();
             var doc = new jsPDF('p', 'pt', [500, 500]);
             doc.addImage(imgData, 'JPEG', 0, 0, 500, 500);
             doc.setFontSize(14);
@@ -420,7 +429,7 @@
             doc.text(5, 30, `GAN_${whichGif}`);
             doc.text(5, 55, `FRAME_${frame}`);
             doc.text(5, 80, `GLOBAL_SENTIMENT_${sentimentOverall}`);
-            doc.text(5, 105, `CONTRIBUTORS_TO_THE_LATENT_SPACE_${sentimentOverall}`);
+            doc.text(5, 105, `CONTRIBUTORS_TO_THE_LATENT_SPACE_${contributors}`);
             doc.text(5, 130, `CREATED_BY_KES_INKERSOLE`);
             doc.text(5, 155, `BUILT_BY_AVD`);
             doc.addImage(smile, 'PNG', 400, 400, 60, 60);
@@ -478,7 +487,33 @@
     });
 
     socket.on('global_response', data => {
-        console.log('global_response', data);
+        console.log('FUUUCK');
+        // sentimentOverall = Object.keys(sentimentObj).reduce((positive, negative) => sentimentObj[positive] > sentimentObj[negative] ? positive : negative);§
+        contributors = data.data.no_sessions;
+        sentArr = [];
+        sentArr.push(data.data.positive_total_score, data.data.negative_total_score, data.data.neutral_total_score);
+        var max = sentArr[0];
+        var maxIndex = 0;
+
+        for (var i = 1; i < sentArr.length; i++) {
+            if (sentArr[i] > max) {
+                maxIndex = i;
+                max = sentArr[i];
+            };
+        };
+
+        console.log('maxx', maxIndex);
+        if (maxIndex === 0) {
+            gifCanvXXX.children[0].style.filter = `hue-rotate(200deg)`;
+            sentimentOverall = 'POSITIVE';
+        } else if (maxIndex === 2) {
+            gifCanvXXX.children[0].style.filter = `hue-rotate(0deg)`;
+            sentimentOverall = 'NEUTRAL';
+        } else if (maxIndex === 1) {
+            gifCanvXXX.children[0].style.filter = `hue-rotate(-200deg)`;
+            sentimentOverall = 'NEGATIVE';
+        };
+        console.log('XXXX', sentimentOverall);
     });
 
     socket.emit('hello');
@@ -496,10 +531,13 @@
     console.log(rub);
     rub.load(() => {
         console.log('loaded bb');
+        console.log(firstEnter);
+        superGifLoaded = true;
         gifCanvXXX = document.getElementsByClassName('jsgif')[0];
         gifCanvXXX.children[0].style.opacity = '1';
-        // runway.style.opacity = '1';
-        // var frame = rub.get_current_frame();
+        if (firstEnter) {
+            start();
+        };
     });
 
     setTimeout(() => {
