@@ -189,15 +189,10 @@
             sentimentObj.negative++;
             background.style.filter = `hue-rotate(-200deg)`;
         };
-        sentimentOverall = Object.keys(sentimentObj).reduce((positive, negative) => sentimentObj[positive] > sentimentObj[negative] ? positive : negative);
-        console.log('XXX', sentimentOverall);
-        if (sentimentOverall === 'positive') {
-            gifCanvXXX.style.filter = `hue-rotate(200deg)`;
-        } else if (sentimentOverall === 'neutral') {
-            gifCanvXXX.style.filter = `hue-rotate(0deg)`;
-        } else if (sentimentOverall === 'negative') {
-            gifCanvXXX.style.filter = `hue-rotate(-200deg)`;
-        };
+        // console.log('XXX', sentimentOverall);
+
+        // how to fetch global data
+        socket.emit('fetch_global_values');
 
         clearInterval(thinkingInt);
         response.style.display = 'none';
@@ -444,12 +439,12 @@
     logo.addEventListener('click', () => enterEvent(false));
     for (var i = 0; i < optionsButtons.length; i++) {
         optionsButtons[i].addEventListener('click', (e) => inputEvent(e));
-    }
+    };
 
     // socket
     // TODO: the socket will need to be changed when it is running of heroku
-    // var socket = io.connect("http://localhost:8080");
-    var socket = io.connect("http://192.168.0.73:8080");
+    var socket = io.connect("http://localhost:8080");
+    // var socket = io.connect("http://192.168.0.73:8080");
     // var socket = io.connect("https://latentspace.herokuapp.com/");
 
     socket.on('hi_there', data => {
@@ -478,12 +473,28 @@
     });
 
     socket.on('global_response', data => {
-        console.log('global_response', data);
+        // sentimentOverall = Object.keys(sentimentObj).reduce((positive, negative) => sentimentObj[positive] > sentimentObj[negative] ? positive : negative);§
+        sentArr = [];
+        sentArr.push(data.data.positive_total_score, data.data.negative_total_score, data.data.neutral_total_score);
+        var max = sentArr[0];
+        var maxIndex = 0;
+
+        for (var i = 1; i < sentArr.length; i++) {
+            if (sentArr[i] > max) {
+                maxIndex = i;
+                max = sentArr[i];
+            };
+        };
+        if (maxIndex === 0) {
+            gifCanvXXX.children[0].style.filter = `hue-rotate(200deg)`;
+        } else if (maxIndex === 2) {
+            gifCanvXXX.children[0].style.filter = `hue-rotate(0deg)`;
+        } else if (maxIndex === 1) {
+            gifCanvXXX.children[0].style.filter = `hue-rotate(-200deg)`;
+        };
     });
 
     socket.emit('hello');
-    // how to fetch global data
-    socket.emit('fetch_global_values');
 
     // setting up gifs
     let whichGif = rando(2, 1);
