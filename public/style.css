@@ -169,16 +169,26 @@ body {
     overflow: hidden;
 }
 
-#runway {
+/* #runway {
     position: absolute;
     width: 100%;
     top: -50%;
+    opacity: 0;
     filter: hue-rotate(0deg);
-    transition: filter 0.5s linear;
+    transition: all 0.5s linear;
+} */
+
+.jsgif {
+    width: 100%;
 }
 
-.jsgif, .jsgif canvas {
+.jsgif canvas {
+    position: absolute;
     width: 100%;
+    top: -50%;
+    opacity: 0;
+    filter: hue-rotate(0deg);
+    transition: all 0.5s linear;
 }
 
 .jsgif_toolbar {
