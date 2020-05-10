@@ -176,8 +176,9 @@ async function fetchGlobalValues() {
         Key: {
             id: 'global_values'
         },
-        ProjectionExpression: '#nqa, #plc, #nglc, #ntlc, #mlc, #pts, #ngts, #ntts, #mts',
+        ProjectionExpression: '#ns, #nqa, #plc, #nglc, #ntlc, #mlc, #pts, #ngts, #ntts, #mts',
         ExpressionAttributeNames: {
+            '#ns': 'no_sessions',
             '#nqa': 'no_questions_answered',
             '#plc': 'positive_label_count',
             '#nglc': 'negative_label_count',
@@ -190,14 +191,8 @@ async function fetchGlobalValues() {
         }
     };
     
-    let paramsx = {
-        TableName: process.env.TABLE_NAME_C
-    };
-
     try {
         let currentGlobalStats = await docClient.get(params).promise();
-        let tableData = await ddb.describeTable(paramsx).promise();
-        currentGlobalStats.Item.no_sessions = tableData.Table.ItemCount;
         return {
             success: true,
             data: currentGlobalStats.Item
@@ -208,8 +203,7 @@ async function fetchGlobalValues() {
     };
 };
 
-async function ddbUpdateGlobal(sentiment) {
-
+async function ddbUpdateGlobal(sentiment, isNewSession) {
     let sentimentScoreMatch = null;
     if (sentimentScoreRegex.test(sentiment.sentimentScore)) {
         sentimentScoreMatch = sentiment.sentimentScore.match(sentimentScoreRegex);
@@ -222,15 +216,14 @@ async function ddbUpdateGlobal(sentiment) {
 
     if (!fetchGlobalResult.success) return;
     
-    console.log('we go the current stats!', fetchGlobalResult.data);
-
     let params = {
         TableName: process.env.TABLE_NAME_GLOBAL,
         Key: {
             id: 'global_values'
         },
-        UpdateExpression: `set #nqa = :nqa, #plc = :plc, #nglc = :nglc, #ntlc = :ntlc, #mlc = :mlc, #pts = :pts, #ngts = :ngts, #ntts = :ntts, #mts = :mts`,
+        UpdateExpression: `set #ns = :ns, #nqa = :nqa, #plc = :plc, #nglc = :nglc, #ntlc = :ntlc, #mlc = :mlc, #pts = :pts, #ngts = :ngts, #ntts = :ntts, #mts = :mts`,
         ExpressionAttributeNames: {
+            '#ns': 'no_sessions',
             '#nqa': 'no_questions_answered',
             '#plc': 'positive_label_count',
             '#nglc': 'negative_label_count',
@@ -242,6 +235,7 @@ async function ddbUpdateGlobal(sentiment) {
             '#mts': 'mixed_total_score',
         },
         ExpressionAttributeValues: {
+            ':ns': isNewSession ? fetchGlobalResult.data.no_sessions + 1 : fetchGlobalResult.data.no_sessions,
             ':nqa': fetchGlobalResult.data.no_questions_answered + 1,
             ':plc': /positive/i.test(sentiment.sentimentLabel) ? fetchGlobalResult.data.positive_label_count + 1 : fetchGlobalResult.data.positive_label_count,
             ':nglc': /negative/i.test(sentiment.sentimentLabel) ? fetchGlobalResult.data.negative_label_count + 1 : fetchGlobalResult.data.negative_label_count,
@@ -282,7 +276,7 @@ function handleMessage(id, dataObj) {
                     await ddbPutC(id, dataObj, data.sentimentResponse);
                     resolve({success: true, sentiment: data.sentimentResponse});
                     ddbPutQ(dataObj.ids, dataObj.question, data.sentimentResponse);
-                    ddbUpdateGlobal(data.sentimentResponse);
+                    ddbUpdateGlobal(data.sentimentResponse, dataObj.ids.qID === 1 ? true : false);
                 })();
             
             };
