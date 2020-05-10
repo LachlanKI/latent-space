@@ -191,15 +191,8 @@
             sentimentObj.negative++;
             background.style.filter = `hue-rotate(-200deg)`;
         };
-        sentimentOverall = Object.keys(sentimentObj).reduce((positive, negative) => sentimentObj[positive] > sentimentObj[negative] ? positive : negative);
-        console.log('XXX', sentimentOverall);
-        if (sentimentOverall === 'positive') {
-            gifCanvXXX.style.filter = `hue-rotate(200deg)`;
-        } else if (sentimentOverall === 'neutral') {
-            gifCanvXXX.style.filter = `hue-rotate(0deg)`;
-        } else if (sentimentOverall === 'negative') {
-            gifCanvXXX.style.filter = `hue-rotate(-200deg)`;
-        };
+        
+        socket.emit('fetch_global_values');
 
         clearInterval(thinkingInt);
         response.style.display = 'none';
@@ -487,7 +480,7 @@
     });
 
     socket.on('global_response', data => {
-        console.log('FUUUCK');
+        console.log('FUUUCK', data);
         // sentimentOverall = Object.keys(sentimentObj).reduce((positive, negative) => sentimentObj[positive] > sentimentObj[negative] ? positive : negative);§
         contributors = data.data.no_sessions;
         sentArr = [];
