@@ -2,6 +2,7 @@ const AWS = require("aws-sdk");
 AWS.config.update({ region: "us-east-1" });
 const lex = new AWS.LexRuntime();
 const docClient = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
+const ddb = new AWS.DynamoDB();
 
 // NOTE: this will not work without loading the AWS credentials via a '.env' file located in the root of the project
 
@@ -188,9 +189,15 @@ async function fetchGlobalValues() {
             '#mts': 'mixed_total_score',
         }
     };
+    
+    let paramsx = {
+        TableName: process.env.TABLE_NAME_C
+    };
 
     try {
-        currentGlobalStats = await docClient.get(params).promise();
+        let currentGlobalStats = await docClient.get(params).promise();
+        let tableData = await ddb.describeTable(paramsx).promise();
+        currentGlobalStats.Item.no_sessions = tableData.Table.ItemCount;
         return {
             success: true,
             data: currentGlobalStats.Item

@@ -75,6 +75,7 @@ axios.get('/data-global-stats').then(result => {
     } else {
         globalStatisticsLoaded = '(๑˃ᴗ˂)ﻭ';
         let globalStatisticsElement = document.getElementById('global-statistics');
+        globalStatisticsElement.appendChild(returnStatElement('number of sessions', data.no_sessions));
         globalStatisticsElement.appendChild(returnStatElement('number of questions answered', data.no_questions_answered));
         globalStatisticsElement.appendChild(returnBreak());
         globalStatisticsElement.appendChild(returnStatElement('positive responses', data.positive_label_count));
