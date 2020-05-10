@@ -517,8 +517,6 @@
     });
 
     socket.emit('hello');
-    // how to fetch global data
-    socket.emit('fetch_global_values');
 
     // setting up gifs
     let whichGif = rando(2, 1);
