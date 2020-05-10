@@ -450,9 +450,9 @@
 
     // socket
     // TODO: the socket will need to be changed when it is running of heroku
-    var socket = io.connect("http://localhost:8080");
+    // var socket = io.connect("http://localhost:8080");
     // var socket = io.connect("http://192.168.0.73:8080");
-    // var socket = io.connect("https://latentspace.herokuapp.com/");
+    var socket = io.connect("https://latentspace.herokuapp.com/");
 
     socket.on('hi_there', data => {
         const { message } = data;
