@@ -206,7 +206,7 @@
             }, 100);
         } else {
             if (pastConvos.length === 3) {
-                console.log('all convos done bo$$');
+                // console.log('all convos done bo$$');
                 end.children[0].innerText = '😃';
                 end.children[0].style.border = 'none';
                 end.children[0].style.fontSize = '60px';
@@ -224,7 +224,7 @@
 
     function sendMessage(message) {
         stats.style.display = 'none';
-        console.log('sending this message', message)
+        // console.log('sending this message', message)
         paused = true;
         socket.emit('send_message', message);
     };
@@ -297,7 +297,7 @@
     };
 
     function start() {
-        console.log('start');
+        // console.log('start');
         whichConvo = rando(3, 1);
         for (var i = 0; i < pastConvos.length; i++) {
             if (whichConvo === pastConvos[i]) {
@@ -306,7 +306,6 @@
             };
         };
         pastConvos.push(whichConvo);
-        console.log(pastConvos);
         response.innerText = conversations[whichConvo][0].q;
         currentResponseType = conversations[whichConvo][0].type;
         responseSetup(true);
@@ -384,7 +383,6 @@
 
     function restart() {
         if (pastConvos.length === 3) {
-            console.log('thats all folks');
         } else {
             countdownInt = setInterval(countdown, 1000);
         };
@@ -467,7 +465,7 @@
 
     // question stat response
     socket.on('q_response', data => {
-        console.log('q_response', data);
+        // console.log('q_response', data);
         var percentageStats = {
             positive: (data.data.positive_label_count / data.data.times_answered * 100).toFixed(1),
             neutral: (data.data.neutral_label_count / data.data.times_answered * 100).toFixed(1),
@@ -480,7 +478,6 @@
     });
 
     socket.on('global_response', data => {
-        console.log('FUUUCK', data);
         // sentimentOverall = Object.keys(sentimentObj).reduce((positive, negative) => sentimentObj[positive] > sentimentObj[negative] ? positive : negative);§
         contributors = data.data.no_sessions;
         sentArr = [];
@@ -495,7 +492,6 @@
             };
         };
 
-        console.log('maxx', maxIndex);
         if (maxIndex === 0) {
             gifCanvXXX.children[0].style.filter = `hue-rotate(200deg)`;
             sentimentOverall = 'POSITIVE';
@@ -506,7 +502,6 @@
             gifCanvXXX.children[0].style.filter = `hue-rotate(-200deg)`;
             sentimentOverall = 'NEGATIVE';
         };
-        console.log('XXXX', sentimentOverall);
     });
 
     socket.emit('hello');
@@ -519,10 +514,7 @@
 
         //runway gif
     rub = new SuperGif({ gif: runway } );
-    console.log(rub);
     rub.load(() => {
-        console.log('loaded bb');
-        console.log(firstEnter);
         superGifLoaded = true;
         gifCanvXXX = document.getElementsByClassName('jsgif')[0];
         gifCanvXXX.children[0].style.opacity = '1';
