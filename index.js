@@ -8,6 +8,7 @@ const basicAuth = require('basic-auth');
 const bodyParser = require("body-parser");
 const server = require("http").Server(app);
 const io = require("socket.io")(server);
+const path = require("path");
 const { v4 } = require('uuid');
 
 // functions
@@ -24,7 +25,7 @@ const auth = function(req, res, next) {
 };
 
 // middleware
-app.use(express.static("./public"));
+app.use(express.static("public"));
 app.use(bodyParser.json());
 
 io.on("connection", function(socket) {
@@ -65,12 +66,6 @@ io.on("connection", function(socket) {
 
 });
 
-app.get("/", (req, res) => res.sendFile(__dirname + "/index.html"));
-
-app.get("/data", [auth], (req, res) => {
-    res.sendFile(__dirname + '/data.html'); 
-});
-
 app.get('/data-global-stats', [auth], (req, res) => {
     fetchGlobalValues().then(result => {
         if (result.success) {
@@ -100,6 +95,15 @@ app.get('/data-conversations', [auth], (req, res) => {
         };
     });
 });
+
+app.get('/', (req, res) => {
+    res.sendFile('index.html', { root: path.join(__dirname, 'public') });
+});
+
+app.get('/data', (req, res) => {
+    res.sendFile('data.html', { root: path.join(__dirname, 'public') });
+});
+
 
 app.all("*", (req, res) => res.redirect("/"));
 
