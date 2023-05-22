@@ -104,7 +104,6 @@ app.get('/data', (req, res) => {
     res.sendFile('data.html', { root: path.join(__dirname, 'public') });
 });
 
-
 app.all("*", (req, res) => res.redirect("/"));
 
 server.listen(process.env.PORT || 8080, () => console.log("(っ˘з(˘⌣˘ ) ♡"));
