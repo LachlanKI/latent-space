@@ -66,6 +66,11 @@ io.on("connection", function(socket) {
 
 });
 
+// TODO: change from socket to
+app.get('/lex-id', (req, res) => {
+    res.status(200).send((Date.now() + v4()).replace(/-|_/g, ''))
+});
+
 app.get('/data-global-stats', [auth], (req, res) => {
     fetchGlobalValues().then(result => {
         if (result.success) {

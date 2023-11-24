@@ -1,4 +1,4 @@
-(() => {
+(async () => {
 
     // vars
     let paused = true;
@@ -192,6 +192,7 @@
             background.style.filter = `hue-rotate(-200deg)`;
         };
 
+        // TODO: change to axios req
         socket.emit('fetch_global_values');
 
         clearInterval(thinkingInt);
@@ -223,10 +224,15 @@
     };
 
     function sendMessage(message) {
+        console.log('message¡¡¡', message);
         stats.style.display = 'none';
         // console.log('sending this message', message)
         paused = true;
+        // FIXME: update to axios
         socket.emit('send_message', message);
+        // axios.post('/send-message', message).then(result => {
+        //     console.log('result_sendmessage', result);
+        // }).catch(err => console.error('err_sendmesdsage:' + err));
     };
 
     function inputEvent(e) {
@@ -351,6 +357,7 @@
     };
 
     function fetchStats(x, y) {
+        // FIXME: update to axios
         socket.emit('fetch_question_stats', {ids: {sID: x, qID: y}});
     };
 
@@ -403,6 +410,15 @@
         xhr.send();
     };
 
+    // (╯°益°)╯彡┻━┻ -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+
+    // add async funcs here to replace socket.io things
+    async function fetchLexId() {
+        return axios.get('/lex-id');
+    };
+
+    // (╯°益°)╯彡┻━┻ -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+
     // download pdf
     var smile, logoUri;
     function download() {
@@ -448,21 +464,24 @@
 
     // socket
     // TODO: the socket will need to be changed when it is running of heroku
-    // var socket = io.connect("http://localhost:8080");
+    var socket = io.connect("http://localhost:8080");
     // var socket = io.connect("http://192.168.0.73:8080");
-    var socket = io.connect("https://latent-space.vercel.app/");
+    // var socket = io.connect("https://latent-space.vercel.app/");
 
+    // FIXME: redundant
     socket.on('hi_there', data => {
         const { message } = data;
         paused = false;
     });
 
+    // FIXME: redundant
     socket.on('response', data => {
         const { sentiment } = data;
         responseReceived(sentiment);
         paused = false;
     });
 
+    // FIXME: redundant
     // question stat response
     socket.on('q_response', data => {
         // console.log('q_response', data);
@@ -477,6 +496,7 @@
         stats.style.display = 'flex';
     });
 
+    // FIXME: redundant
     socket.on('global_response', data => {
         // sentimentOverall = Object.keys(sentimentObj).reduce((positive, negative) => sentimentObj[positive] > sentimentObj[negative] ? positive : negative);§
         contributors = data.data.no_sessions;
@@ -504,7 +524,16 @@
         };
     });
 
-    socket.emit('hello');
+    // TODO: change to fetch lexId (which will be used to update the db)
+    // socket.emit('hello');
+
+    let lexId;
+    try {
+        lexId = await fetchLexId();
+        lexId = lexId.data;
+    } catch (error) {
+        console.error('error fetching lex id', error);
+    };
 
     // setting up gifs
     let whichGif = rando(2, 1);
