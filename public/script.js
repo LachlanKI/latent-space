@@ -553,13 +553,9 @@
     await fetchLexId();
 
     // setting up gifs
-    // let whichGif = rando(2, 1);
-    //     // background gif
-    // background.style.background = `url(/assets/runway${whichGif}.gif) no-repeat center center fixed`;
-    // background.style.backgroundSize = `cover`;
 
     let whichGif = Math.floor(Math.random() * 2) + 1; // Random number between 1 and 2
-    let imagePath = `./assets/runway${whichGif}.gif`; // Use relative path
+    let imagePath = `./assets/runway${whichGif}.gif?randomval=${Math.random()}`; // Use relative path
 
     // Create new image object
     let img = new Image();
