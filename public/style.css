@@ -33,6 +33,15 @@ body {
     align-items: center;
 }
 
+html, body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+    display: none;
+}
+
 #boxWrap {
     height: 100px;
     width: 100px;
