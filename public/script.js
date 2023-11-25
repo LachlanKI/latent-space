@@ -397,10 +397,9 @@
 
     // (╯°益°)╯彡┻━┻ -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
-    // function to handle disabling and enabling of the dom elements inputWrap, enterButton, and infoWrapper based on a boolean argument
+    // function to handle disabling and enabling of the dom elements inputWrap, send and infoWrapper based on a boolean argument
     function disableElements(bool) {
         inputWrap.style.pointerEvents = bool ? 'none' : 'auto';
-        enterButton.style.pointerEvents = bool ? 'none' : 'auto';
         infoWrapper.style.pointerEvents = bool ? 'none' : 'auto';
         send.style.pointerEvents = bool ? 'none' : 'auto';
     };
@@ -582,6 +581,8 @@
         superGifLoaded = true;
         gifCanvXXX = document.getElementsByClassName('jsgif')[0];
         gifCanvXXX.children[0].style.opacity = '1';
+
+
         if (firstEnter) {
             start();
         };

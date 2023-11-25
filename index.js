@@ -32,10 +32,12 @@ app.use(bodyParser.json());
 // ROUTES TO REPLACE SOCKET
 
 app.get('/lex-id', (req, res) => {
+    console.log('lex-id route hit');
     res.status(200).send((Date.now() + v4()).replace(/-|_/g, ''))
 });
 
 app.post('/send-message', (req, res) => {
+    console.log('send-message route hit');
     handleMessage(req.body.lexId, req.body.message).then(result => {
         const { success, sentiment } = result;
         if (!success) {
@@ -48,12 +50,14 @@ app.post('/send-message', (req, res) => {
 });
 
 app.get('/fetch-question-stats', (req, res) => {
+    console.log('fetch-question-stats route hit');
     getQuestionStats(req.query).then(result => {
         res.json(result);
     });
 });
 
 app.get('/fetch-global-values', (req, res) => {
+    console.log('fetch-global-values route hit');
     fetchGlobalValues().then(result => {
         res.json(result);
     });
@@ -62,6 +66,7 @@ app.get('/fetch-global-values', (req, res) => {
 // (╯°益°)╯彡┻━┻ -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
 app.get('/data-global-stats', [auth], (req, res) => {
+    console.log('data-global-stats route hit');
     fetchGlobalValues().then(result => {
         if (result.success) {
             res.json({success: true, result});
@@ -72,6 +77,7 @@ app.get('/data-global-stats', [auth], (req, res) => {
 });
 
 app.get('/data-questions', [auth], (req, res) => {
+    console.log('data-questions route hit');
     getAllQuestionStatistics().then(result => {
         if (result.success) {
             res.json({success: true, result});
@@ -82,6 +88,7 @@ app.get('/data-questions', [auth], (req, res) => {
 });
 
 app.get('/data-conversations', [auth], (req, res) => {
+    console.log('data-conversations route hit');
     getAllConversations().then(result => {
         if (result.success) {
             res.json({success: true, result});
@@ -92,10 +99,12 @@ app.get('/data-conversations', [auth], (req, res) => {
 });
 
 app.get('/', (req, res) => {
+    console.log('index route hit');
     res.sendFile('index.html', { root: path.join(__dirname, 'public') });
 });
 
 app.get('/data', (req, res) => {
+    console.log('data route hit');
     res.sendFile('data.html', { root: path.join(__dirname, 'public') });
 });
 
