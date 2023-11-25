@@ -553,12 +553,33 @@
     await fetchLexId();
 
     // setting up gifs
-    let whichGif = rando(2, 1);
-        // background gif
-    background.style.background = `url(/assets/runway${whichGif}.gif) no-repeat center center fixed`;
-    background.style.backgroundSize = `cover`;
+    // let whichGif = rando(2, 1);
+    //     // background gif
+    // background.style.background = `url(/assets/runway${whichGif}.gif) no-repeat center center fixed`;
+    // background.style.backgroundSize = `cover`;
 
-        //runway gif
+    let whichGif = Math.floor(Math.random() * 2) + 1; // Random number between 1 and 2
+    let imagePath = `./assets/runway${whichGif}.gif`; // Use relative path
+
+    // Create new image object
+    let img = new Image();
+
+    // Set the source of the image object
+    img.src = imagePath;
+
+    // Wait for the image to load
+    img.onload = function() {
+        // Set the background image of the element
+        background.style.background = `url(${imagePath}) no-repeat center center fixed`;
+        background.style.backgroundSize = `cover`;
+    };
+
+    // Handle image loading errors
+    img.onerror = function() {
+        console.error(`Image failed to load: ${imagePath}`);
+    };
+
+    //runway gif
     rub = new SuperGif({ gif: runway } );
     rub.load(() => {
         superGifLoaded = true;
