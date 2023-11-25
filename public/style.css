@@ -42,9 +42,10 @@ body {
     position: absolute;
     z-index: -2;
     width: 100%;
+    opacity: 0;
     height: 100vh;
     min-height: 750px;
-    transition: filter 0.5s linear;
+    transition: filter 0.5s linear, opacity 8s;
     overflow: hidden;
     /* background: url(/assets/runway1.gif) no-repeat fixed center center; */
     -webkit-background-size: cover;

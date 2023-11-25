@@ -568,6 +568,7 @@
         // Set the background image of the element
         background.style.background = `url(${imagePath}) no-repeat center center fixed`;
         background.style.backgroundSize = `cover`;
+        background.style.opacity = 1;
     };
 
     // Handle image loading errors
