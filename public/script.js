@@ -553,8 +553,8 @@
 
     // setting up gifs
 
-    let whichGif = Math.floor(Math.random() * 2); // Random number between 0 and 1
-    let imagePath = `./assets/${whichGif ? 'runwa7' : 'runw4y'}.gif?randomval=${Math.random()}`; // Use relative path
+    let whichGif = Math.floor(Math.random() * 2) + 1; // Random number between 1 and 2
+    let imagePath = `./assets/runway${whichGif}.gif?randomval=${Math.random()}`; // Use relative path
 
     // Create new image object
     let img = new Image();
