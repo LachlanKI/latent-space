@@ -7,7 +7,6 @@ const app = express();
 const basicAuth = require('basic-auth');
 const bodyParser = require("body-parser");
 const server = require("http").Server(app);
-const io = require("socket.io")(server);
 const path = require("path");
 const { v4 } = require('uuid');
 
@@ -28,48 +27,39 @@ const auth = function(req, res, next) {
 app.use(express.static("public"));
 app.use(bodyParser.json());
 
-io.on("connection", function(socket) {
-    // NOTE: created a uuid to append to the socket id, ensures that when we upload results to dynamodb there will be a unique primary partition key
-    socket.lexId = (socket.id + v4()).replace(/-|_/g, '');
-    // TODO: have this event go to lex and get an actual response
-    socket.on('hello', () => {
-        socket.emit('hi_there', {success: true, message: 'hello....... uWu :3'});
-    });
+// (╯°益°)╯彡┻━┻ -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
-    socket.on('send_message', data => {
-        handleMessage(socket.lexId, data).then(result => {
-            const { success, sentiment } = result;
-            if (!success) {
-                console.error('lex is returning error');
-            };
-            setTimeout(() => {
-                socket.emit('response', {success: success, sentiment: sentiment});
-            }, rando(500, 2000));
-        });
-    });
+// ROUTES TO REPLACE SOCKET
 
-    socket.on('fetch_question_stats', data => {
-        console.log('in fetch_question_stats', data);
-        (async () => {
-            let result = await getQuestionStats(data.ids);
-            socket.emit('q_response', result);
-        })();
-    });
-
-    socket.on('fetch_global_values', () => {
-        console.log('in fetchglobalvaluers');
-        (async () => {
-            let result = await fetchGlobalValues();
-            socket.emit('global_response', result);
-        })();
-    });
-
-});
-
-// TODO: change from socket to
 app.get('/lex-id', (req, res) => {
     res.status(200).send((Date.now() + v4()).replace(/-|_/g, ''))
 });
+
+app.post('/send-message', (req, res) => {
+    handleMessage(req.body.lexId, req.body.message).then(result => {
+        const { success, sentiment } = result;
+        if (!success) {
+            console.error('lex is returning error');
+        };
+        setTimeout(() => {
+            res.json({success: success, sentiment: sentiment});
+        }, rando(500, 2000));
+    });
+});
+
+app.get('/fetch-question-stats', (req, res) => {
+    getQuestionStats(req.query).then(result => {
+        res.json(result);
+    });
+});
+
+app.get('/fetch-global-values', (req, res) => {
+    fetchGlobalValues().then(result => {
+        res.json(result);
+    });
+});
+
+// (╯°益°)╯彡┻━┻ -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
 app.get('/data-global-stats', [auth], (req, res) => {
     fetchGlobalValues().then(result => {
